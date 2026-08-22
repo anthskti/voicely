@@ -1,18 +1,13 @@
 # Voicely Render Blueprint
-# Dashboard: New → Blueprint → connect this repo → apply render.yaml
-#
-# Public:  voicely-api  (Go)     → Bruno / Base44 hit this
-# Private: voicely-grader (Python) → only reachable on Render's internal network
-#
-# Keep plans cheap for prototyping. Suspend services when idle.
-# If the grader OOMs on Resemblyzer, bump grader only to `standard` (~$25).
+# Public:  voicely-api (Golang)
+# Private: voicely-grader (Python)
 
 services:
   - type: web
     name: voicely-api
     runtime: docker
     plan: free
-    region: oregon
+    region: ohio
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     healthCheckPath: /healthz
@@ -26,7 +21,7 @@ services:
     name: voicely-grader
     runtime: docker
     plan: starter
-    region: oregon
+    region: ohio
     dockerfilePath: ./grader/Dockerfile
     dockerContext: ./grader
     envVars:
