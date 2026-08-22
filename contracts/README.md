@@ -4,7 +4,7 @@ Frozen shapes for the grade pipeline. Implement Go/Python against these files; d
 
 | File | Direction | Transport |
 |------|-----------|-----------|
-| [`frontend-to-go.multipart.md`](frontend-to-go.multipart.md) | Browser → Go | `multipart/form-data` (raw audio files) |
+| [`frontend-to-go.export.md`](frontend-to-go.export.md) | Browser → Go | `multipart/form-data` then poll JSON |
 | [`go-to-grader.multipart.md`](go-to-grader.multipart.md) | Go → Python | `multipart/form-data` (raw audio files) |
 | [`grader-to-go.response.json`](grader-to-go.response.json) | Python → Go → Browser | JSON body |
 | [`scenes.collection.json`](scenes.collection.json) | Base44 `Scenes` document shape | NoSQL |

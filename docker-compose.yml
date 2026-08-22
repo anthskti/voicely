@@ -34,10 +34,18 @@ services:
       context: ./backend
     ports:
       - "8080:8080"
+    env_file:
+      - path: ./backend/.env
+        required: false
     environment:
       PORT: "8080"
       GRADER_SERVICE_URL: http://grader:8000/evaluate
       DATABASE_URL: postgres://voicely:voicely@postgres:5432/voicely?sslmode=disable
+      AWS_REGION: ${AWS_REGION:-us-east-2}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-voicely-proto-0821}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+      AWS_S3_PUBLIC_BASE_URL: ${AWS_S3_PUBLIC_BASE_URL:-}
     depends_on:
       postgres:
         condition: service_healthy
