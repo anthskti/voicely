@@ -2,6 +2,10 @@
 
 Voice-over practice: record line takes, grade them against scene references, iterate.
 
+Watch demo [HEREEE](https://youtu.be/tY0junGGF5g)!!
+
+![VoicelyPage](frontend/public/mainpage.png)
+
 ## Why
 
 I enjoy story games, but getting stuck in dialogue or cut scenes can get really boring. This is where voice actors shine, and honestly, made me really appreciate it them more when I tried voicing them. 
