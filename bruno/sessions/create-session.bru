@@ -1,0 +1,29 @@
+meta {
+  name: Create session
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/sessions
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "user_id": "{{userId}}",
+    "scene_id": "{{sceneId}}",
+    "overall_grade": "A",
+    "overall_score_raw": 0.86
+  }
+}
+
+docs {
+  Save a grade result after POST /grade. user_id is trusted for proto (no JWT yet).
+}

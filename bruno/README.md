@@ -4,9 +4,11 @@ Open this folder in Bruno. Select environment **local** (`http://localhost:8080`
 
 | Request | Purpose |
 |---------|---------|
-| `grade/Grade scene_01 (good takes)` | Happy-path multipart with 3 fixture WAVs |
-| `grade/Grade scene_01 (short + quiet edge takes)` | Edge audio for stub scorer later |
-| `grade/Grade scene_02 (good takes)` | Second scene id + transcripts |
+| `grade/Grade scene_01 (good takes)` | Happy-path multipart with 6 Valorant WAVs |
+| `scenes/List scenes` | GET all scenes from Postgres |
+| `scenes/Get scene_valorant` | GET one scene + chunks |
+| `sessions/Create session` | POST save after grade |
+| `sessions/List sessions` | GET history filtered by user/scene |
 
 **Phase 0:** collection + fixtures only — requests will fail until Phase 1 (`docker compose` Go + grader).
 

@@ -1,0 +1,52 @@
+{
+  "id": "scene_valorant",
+  "title": "Valorant — Phoenix Clutch",
+  "difficulty": "medium",
+  "video_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/video.mp4",
+  "soundtrack_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/soundtrack.mp3",
+  "vocals_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/vocals.mp3",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 1.3,
+      "end_time_sec": 3.0,
+      "transcript": "You cannot let her plant.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 3.0,
+      "end_time_sec": 4.8,
+      "transcript": "Alright, I'm going in.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 4.8,
+      "end_time_sec": 6.1,
+      "transcript": "What about the hostile.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_02.wav"
+    },
+    {
+      "index": 3,
+      "start_time_sec": 6.1,
+      "end_time_sec": 7.9,
+      "transcript": "I wouldn't worry bout her.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_03.wav"
+    },
+    {
+      "index": 4,
+      "start_time_sec": 11.4,
+      "end_time_sec": 12.0,
+      "transcript": "Are you certain?",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_04.wav"
+    },
+    {
+      "index": 5,
+      "start_time_sec": 12.0,
+      "end_time_sec": 15.9,
+      "transcript": "One hundred, I got this.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_05.wav"
+    }
+  ]
+}

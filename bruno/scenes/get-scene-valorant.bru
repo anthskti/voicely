@@ -1,0 +1,19 @@
+meta {
+  name: Get scene_valorant
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/scenes/{{sceneId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  Single scene with 6 chunks and S3 media URLs.
+}

@@ -1,0 +1,19 @@
+meta {
+  name: List scenes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/v1/scenes
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  Returns all seeded scenes including scene_valorant with chunks.
+}
