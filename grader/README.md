@@ -24,3 +24,7 @@ uv run uvicorn main:app --reload --port 8000
 Go API default: `GRADER_SERVICE_URL=http://localhost:8000/evaluate`.
 
 Python is pinned to **3.12** (Resemblyzer/torch are not reliable on 3.14 yet).
+
+```bash
+ASSETS_ROOT=../assets uv run uvicorn main:app --reload --port 8000
+```

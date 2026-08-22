@@ -8,7 +8,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-// temp
+# temp
 _ASSETS_ROOT = Path(
     os.getenv(
         "ASSETS_ROOT",

@@ -17,25 +17,26 @@ headers {
 body:multipart-form {
   scene_id: {{sceneId}}
   user_id: {{userId}}
-  chunk_transcripts: Welcome to the morning brief.
-  chunk_transcripts: Markets opened mixed after overnight futures.
-  chunk_transcripts: Stay with us for the full report.
-  reference_audio_urls: https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_00.wav
-  reference_audio_urls: https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_01.wav
-  reference_audio_urls: https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_02.wav
-  @file(
-    audio_chunks: ../../fixtures/audio/user_take_good_00.wav
-  )
-  @file(
-    audio_chunks: ../../fixtures/audio/user_take_good_01.wav
-  )
-  @file(
-    audio_chunks: ../../fixtures/audio/user_take_good_02.wav
-  )
+  chunk_transcripts: You cannot let her plant.
+  chunk_transcripts: "Alright, I'm going in."
+  chunk_transcripts: What about the hostile.
+  chunk_transcripts: "I wouldn't worry bout her."
+  chunk_transcripts: Are you certain?
+  chunk_transcripts: One hundred, I got this.
+  reference_audio_urls: https://voicely-proto-0821.s3.us-east-2.amazonaws.com/scenes/scene_valorant/refs/chunk_00.wav
+  reference_audio_urls: https://voicely-proto-0821.s3.us-east-2.amazonaws.com/scenes/scene_valorant/refs/chunk_01.wav
+  reference_audio_urls: https://voicely-proto-0821.s3.us-east-2.amazonaws.com/scenes/scene_valorant/refs/chunk_02.wav
+  reference_audio_urls: https://voicely-proto-0821.s3.us-east-2.amazonaws.com/scenes/scene_valorant/refs/chunk_03.wav
+  reference_audio_urls: https://voicely-proto-0821.s3.us-east-2.amazonaws.com/scenes/scene_valorant/refs/chunk_04.wav
+  reference_audio_urls: https://voicely-proto-0821.s3.us-east-2.amazonaws.com/scenes/scene_valorant/refs/chunk_05.wav
+  audio_chunks: @file(../valorant/user_voice/Track1_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track2_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track3_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track4_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track5_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track6_VoiceAudio.wav)
 }
 
 docs {
-  Phase 0 fixture request for scene_01.
-  Expect JSON shaped like contracts/grader-to-go.response.json once Phase 1 Go + grader are up.
-  Until then this returns connection refused — that is expected.
+  Valorant scene: transcripts + public S3 ref slices; user takes from valorant/user_voice.
 }

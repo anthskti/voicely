@@ -2,13 +2,11 @@ package config
 
 import "os"
 
-// Config holds runtime settings loaded from the environment.
 type Config struct {
 	Port             string
 	GraderServiceURL string
 }
 
-// Load reads PORT and GRADER_SERVICE_URL with prototype defaults.
 func Load() Config {
 	return Config{
 		Port:             getEnv("PORT", "8080"),
