@@ -72,6 +72,10 @@ func (h *SessionHandler) CreateSession(c *gin.Context) {
 		OverallGrade:    req.OverallGrade,
 		OverallScoreRaw: req.OverallScoreRaw,
 	}
+	if url := strings.TrimSpace(req.ExportURL); url != "" {
+		session.ExportURL = &url
+		session.ExportStatus = model.ExportStatusReady
+	}
 
 	if err := h.sessions.Create(&session); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to create session", "detail": err.Error()})
@@ -81,6 +85,7 @@ func (h *SessionHandler) CreateSession(c *gin.Context) {
 	c.JSON(http.StatusCreated, session)
 }
 
+// lists all sessions for 1 user
 func (h *SessionHandler) ListSessions(c *gin.Context) {
 	userID := strings.TrimSpace(c.Query("user_id"))
 	sceneID := strings.TrimSpace(c.Query("scene_id"))

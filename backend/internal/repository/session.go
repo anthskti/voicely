@@ -12,9 +12,34 @@ type SessionRepository struct {
 func NewSessionRepository(db *gorm.DB) *SessionRepository {
 	return &SessionRepository{db: db}
 }
+
 // saves a practice attempt
 func (r *SessionRepository) Create(session *model.Session) error {
 	return r.db.Create(session).Error
+}
+
+func (r *SessionRepository) GetByID(id string) (*model.Session, error) {
+	var session model.Session
+	err := r.db.First(&session, "id = ?", id).Error
+	if err != nil {
+		return nil, err
+	}
+	return &session, nil
+}
+
+func (r *SessionRepository) UpdateExport(id, status, url, errMsg string) error {
+	updates := map[string]any{
+		"export_status": status,
+	}
+	if url != "" {
+		updates["export_url"] = url
+	}
+	if errMsg != "" {
+		updates["export_error"] = errMsg
+	} else if status == model.ExportStatusReady {
+		updates["export_error"] = nil
+	}
+	return r.db.Model(&model.Session{}).Where("id = ?", id).Updates(updates).Error
 }
 
 // lists all sessions for a user or scene

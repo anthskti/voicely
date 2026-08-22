@@ -11,6 +11,9 @@ type Config struct {
 	Port             string
 	GraderServiceURL string
 	DatabaseURL      string
+	AWSRegion        string
+	AWSS3Bucket      string
+	AWSS3PublicBase  string
 }
 
 func Load() Config {
@@ -20,6 +23,9 @@ func Load() Config {
 		Port:             getEnv("PORT", ""),
 		GraderServiceURL: getEnv("GRADER_SERVICE_URL", ""),
 		DatabaseURL:      getEnv("DATABASE_URL", ""),
+		AWSRegion:        getEnv("AWS_REGION", ""),
+		AWSS3Bucket:      getEnv("AWS_S3_BUCKET", ""),
+		AWSS3PublicBase:  getEnv("AWS_S3_PUBLIC_BASE_URL", ""),
 	}
 }
 

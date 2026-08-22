@@ -8,7 +8,8 @@ Open this folder in Bruno. Select environment **local** (`http://localhost:8080`
 | `scenes/List scenes` | GET all scenes from Postgres |
 | `scenes/Get scene_valorant` | GET one scene + chunks |
 | `sessions/Create session` | POST save after grade |
-| `sessions/List sessions` | GET history filtered by user/scene |
+| `export/Start export (Valorant takes)` | POST async FFmpeg mux |
+| `export/Get export status` | Poll until `export_url` |
 
 **Phase 0:** collection + fixtures only — requests will fail until Phase 1 (`docker compose` Go + grader).
 

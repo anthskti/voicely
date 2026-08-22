@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/anthskti/voicely/internal/config"
@@ -35,6 +36,16 @@ func main() {
 	sceneHandler := handler.NewSceneHandler(sceneRepo)
 	sessionHandler := handler.NewSessionHandler(sessionRepo, sceneRepo)
 
+	var s3Store *service.S3Store
+	s3Store, err = service.NewS3Store(context.Background(), cfg)
+	if err != nil {
+		log.Printf("export disabled: %v", err)
+		s3Store = nil
+	}
+	exporter := service.NewExporter(s3Store)
+	exportJobs := service.NewExportJobStore()
+	exportHandler := handler.NewExportHandler(sceneRepo, sessionRepo, exporter, exportJobs)
+
 	r := gin.Default()
 	r.Use(middleware.CORS())
 
@@ -49,6 +60,8 @@ func main() {
 		v1.GET("/scenes/:id", sceneHandler.GetScene)
 		v1.POST("/sessions", sessionHandler.CreateSession)
 		v1.GET("/sessions", sessionHandler.ListSessions)
+		v1.POST("/export", exportHandler.StartExport)
+		v1.GET("/exports/:id", exportHandler.GetExport)
 	}
 
 	addr := ":" + cfg.Port
