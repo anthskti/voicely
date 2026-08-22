@@ -1,0 +1,36 @@
+# Voicely Render Blueprint
+# Public:  voicely-api (Golang)
+# Private: voicely-grader (Python)
+
+services:
+  - type: web
+    name: voicely-api
+    runtime: docker
+    plan: starter
+    region: oregon
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /healthz
+    envVars:
+      - key: PORT
+        value: "8080"
+      - key: GRADER_SERVICE_URL
+        value: http://voicely-grader:10000/evaluate
+
+  - type: pserv
+    name: voicely-grader
+    runtime: docker
+    # 4 GB / 2 CPU, comfortable for Resemblyzer + Torch on CPU
+    plan: pro
+    region: oregon
+    dockerfilePath: ./grader/Dockerfile
+    dockerContext: ./grader
+    envVars:
+      - key: PORT
+        value: "10000"
+      - key: HOST
+        value: "0.0.0.0"
+      - key: OMP_NUM_THREADS
+        value: "2"
+      - key: MKL_NUM_THREADS
+        value: "2"

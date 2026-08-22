@@ -1,0 +1,25 @@
+# Local Phase 1/3 parity — same wiring as Render (api → grader internal URL)
+services:
+  grader:
+    build:
+      context: ./grader
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: "8000"
+      HOST: "0.0.0.0"
+      ASSETS_ROOT: /assets
+    volumes:
+      - ./assets:/assets:ro
+      - ./valorant:/valorant:ro
+
+  api:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      GRADER_SERVICE_URL: http://grader:8000/evaluate
+    depends_on:
+      - grader
