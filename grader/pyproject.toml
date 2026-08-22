@@ -1,0 +1,26 @@
+[project]
+name = "grader"
+version = "0.1.0"
+description = "Voicely's audio grading microservice"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.32.0",
+    "python-multipart>=0.0.17",
+    "python-dotenv>=1.0.0",
+    "httpx>=0.27.0",
+    "numpy>=1.26.0",
+    "resemblyzer>=0.1.4",
+    "setuptools>=70,<82",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["api", "models", "services"]
+
+[project.scripts]
+grader = "main:main"

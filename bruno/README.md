@@ -1,6 +1,6 @@
 # Bruno collection (Phase 0)
 
-Open this folder in [Bruno](https://www.usebruno.com/). Select environment **local** (`http://localhost:8080`).
+Open this folder in Bruno. Select environment **local** (`http://localhost:8080`).
 
 | Request | Purpose |
 |---------|---------|
