@@ -1,0 +1,41 @@
+meta {
+  name: Grade scene_01 (good takes)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/grade
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+body:multipart-form {
+  scene_id: {{sceneId}}
+  user_id: {{userId}}
+  chunk_transcripts: Welcome to the morning brief.
+  chunk_transcripts: Markets opened mixed after overnight futures.
+  chunk_transcripts: Stay with us for the full report.
+  reference_audio_urls: https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_00.wav
+  reference_audio_urls: https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_01.wav
+  reference_audio_urls: https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_02.wav
+  @file(
+    audio_chunks: ../../fixtures/audio/user_take_good_00.wav
+  )
+  @file(
+    audio_chunks: ../../fixtures/audio/user_take_good_01.wav
+  )
+  @file(
+    audio_chunks: ../../fixtures/audio/user_take_good_02.wav
+  )
+}
+
+docs {
+  Phase 0 fixture request for scene_01.
+  Expect JSON shaped like contracts/grader-to-go.response.json once Phase 1 Go + grader are up.
+  Until then this returns connection refused — that is expected.
+}

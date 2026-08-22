@@ -1,0 +1,32 @@
+{
+  "id": "scene_01",
+  "title": "Morning Brief (sample)",
+  "video_no_vox_path": "./video_no_vox.mp4",
+  "video_no_vox_url": "https://example.invalid/voicely-proto/scenes/scene_01/video_no_vox.mp4",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 0.0,
+      "end_time_sec": 1.8,
+      "transcript": "Welcome to the morning brief.",
+      "reference_audio_path": "./refs/chunk_00.wav",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 1.8,
+      "end_time_sec": 4.2,
+      "transcript": "Markets opened mixed after overnight futures.",
+      "reference_audio_path": "./refs/chunk_01.wav",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 4.2,
+      "end_time_sec": 6.2,
+      "transcript": "Stay with us for the full report.",
+      "reference_audio_path": "./refs/chunk_02.wav",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_02.wav"
+    }
+  ]
+}

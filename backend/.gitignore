@@ -1,0 +1,35 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries built with `go test -c`
+*.test
+
+# Output of the go coverage tool, code coverage profiles
+*.out
+coverage.*
+*.coverprofile
+profile.cov
+
+# Go workspace files (unless you explicitly want to share your workspace)
+go.work
+go.work.sum
+
+# Dependency directories
+# Un-comment the next line if you opt out of Go modules and vendor your dependencies
+# vendor/
+
+# Local environment variables
+.env
+
+# Common custom build output directory
+bin/
+
+# JetBrains IDEs (Goland, IntelliJ)
+.idea/
+
+# Visual Studio Code
+.vscode/

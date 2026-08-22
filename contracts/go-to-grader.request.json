@@ -1,0 +1,23 @@
+{
+  "scene_id": "scene_01",
+  "chunks": [
+    {
+      "chunk_index": 0,
+      "transcript": "Welcome to the morning brief.",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_00.wav",
+      "user_audio_base64": "<base64-encoded-wav-bytes>"
+    },
+    {
+      "chunk_index": 1,
+      "transcript": "Markets opened mixed after overnight futures.",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_01.wav",
+      "user_audio_base64": "<base64-encoded-wav-bytes>"
+    },
+    {
+      "chunk_index": 2,
+      "transcript": "Stay with us for the full report.",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_01/refs/chunk_02.wav",
+      "user_audio_base64": "<base64-encoded-wav-bytes>"
+    }
+  ]
+}

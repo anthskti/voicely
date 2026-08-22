@@ -1,0 +1,41 @@
+{
+  "session_id": "sess_proto_0001",
+  "overall_grade": "A",
+  "overall_score_raw": 0.86,
+  "pros": [
+    "Timing stayed close to the reference on most lines.",
+    "Consistent energy across chunks."
+  ],
+  "cons": [
+    "Chunk 1 ran slightly long versus the reference."
+  ],
+  "chunk_breakdowns": [
+    {
+      "chunk_index": 0,
+      "grade": "S",
+      "score_raw": 0.92,
+      "pitch": 0.9,
+      "cadence": 0.94,
+      "timbre": 0.91,
+      "notes": "Strong match on cadence."
+    },
+    {
+      "chunk_index": 1,
+      "grade": "B",
+      "score_raw": 0.78,
+      "pitch": 0.8,
+      "cadence": 0.72,
+      "timbre": 0.82,
+      "notes": "Cadence drifted; take was longer than reference."
+    },
+    {
+      "chunk_index": 2,
+      "grade": "A",
+      "score_raw": 0.88,
+      "pitch": 0.87,
+      "cadence": 0.89,
+      "timbre": 0.88,
+      "notes": "Solid close."
+    }
+  ]
+}

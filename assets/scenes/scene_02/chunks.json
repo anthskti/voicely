@@ -1,0 +1,32 @@
+{
+  "id": "scene_02",
+  "title": "Product Demo (sample)",
+  "video_no_vox_path": "./video_no_vox.mp4",
+  "video_no_vox_url": "https://example.invalid/voicely-proto/scenes/scene_02/video_no_vox.mp4",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 0.0,
+      "end_time_sec": 2.2,
+      "transcript": "This is the moment everything clicks.",
+      "reference_audio_path": "./refs/chunk_00.wav",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_02/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 2.2,
+      "end_time_sec": 3.8,
+      "transcript": "One tap. Instant clarity.",
+      "reference_audio_path": "./refs/chunk_01.wav",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_02/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 3.8,
+      "end_time_sec": 6.6,
+      "transcript": "Try it once, and you will not go back.",
+      "reference_audio_path": "./refs/chunk_02.wav",
+      "reference_audio_url": "https://example.invalid/voicely-proto/scenes/scene_02/refs/chunk_02.wav"
+    }
+  ]
+}
