@@ -1,5 +1,21 @@
-# Local Phase 1/3 parity — same wiring as Render (api → grader internal URL)
+# Local Phase 
 services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: voicely
+      POSTGRES_PASSWORD: voicely
+      POSTGRES_DB: voicely
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voicely -d voicely"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   grader:
     build:
       context: ./grader
@@ -21,5 +37,12 @@ services:
     environment:
       PORT: "8080"
       GRADER_SERVICE_URL: http://grader:8000/evaluate
+      DATABASE_URL: postgres://voicely:voicely@postgres:5432/voicely?sslmode=disable
     depends_on:
-      - grader
+      postgres:
+        condition: service_healthy
+      grader:
+        condition: service_started
+
+volumes:
+  postgres_data:

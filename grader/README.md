@@ -11,6 +11,8 @@ FastAPI microservice that scores user takes against reference audio.
 
 ## Run
 
+System dependency: **ffmpeg** (decodes browser WebM/Opus and Safari MP4 takes to PCM).
+
 ```bash
 cd grader
 cp .env.example .env  

@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import tempfile
 import uuid
 from pathlib import Path
 
@@ -11,6 +10,7 @@ import soundfile as sf
 from resemblyzer import VoiceEncoder, preprocess_wav
 
 from models.schemas import ChunkBreakdown, GraderResponse
+from services.audio import materialize_wav
 
 _encoder: VoiceEncoder | None = None
 
@@ -36,12 +36,6 @@ def score_to_grade(score: float) -> str:
     if score >= 0.50:
         return "D"
     return "F"
-
-
-def _write_temp_wav(data: bytes) -> Path:
-    with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
-        tmp.write(data)
-        return Path(tmp.name)
 
 
 def _wav_from_path(path: Path) -> np.ndarray:
@@ -104,8 +98,8 @@ def score_chunk(
     ref_audio: bytes,
     user_audio: bytes,
 ) -> ChunkBreakdown:
-    ref_path = _write_temp_wav(ref_audio)
-    user_path = _write_temp_wav(user_audio)
+    ref_path = materialize_wav(ref_audio)
+    user_path = materialize_wav(user_audio)
     try:
         ref_dur = _duration_seconds(ref_path)
         user_dur = _duration_seconds(user_path)
