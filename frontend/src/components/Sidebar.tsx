@@ -19,10 +19,10 @@ export function Sidebar() {
             alt="Voicely Logo"
             width={36}
             height={36}
-            className="rounded-xl shadow-md shadow-[#93BADF]/20 group-hover:scale-105 transition-transform"
+            className="rounded-md shadow-md shadow-[#93BADF]/20 group-hover:scale-105 transition-transform"
           />
           <span className="font-display text-xl font-bold tracking-wider text-white">
-            VOICELY
+            Voicely
           </span>
         </Link>
 

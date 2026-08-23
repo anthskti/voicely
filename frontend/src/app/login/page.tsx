@@ -45,7 +45,7 @@ function LoginForm() {
     <div className="w-full max-w-md space-y-8 glass-card p-8 rounded-2xl border border-[#93BADF]/20 bg-[#1d1e27]/90 shadow-2xl">
       <div className="text-center">
         <Link href="/" className="inline-block font-display text-3xl font-bold tracking-wider text-[#93BADF]">
-          VOICELY
+          Voicely
         </Link>
         <h2 className="mt-4 font-display text-2xl font-bold text-white">Welcome back</h2>
       </div>
