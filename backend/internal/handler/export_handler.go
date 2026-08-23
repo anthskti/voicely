@@ -163,6 +163,27 @@ func (h *ExportHandler) GetExport(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "export not found", "detail": "job expired or unknown — retry POST /api/v1/export"})
 		return
 	}
+
+	if job.Status == model.ExportStatusReady && job.ExpiresAt != nil {
+		now := time.Now().UTC()
+		if !now.Before(*job.ExpiresAt) {
+			h.jobs.MarkExpired(id)
+			job, _ = h.jobs.Get(id)
+			c.JSON(http.StatusGone, job)
+			return
+		}
+		if job.ObjectKey != "" {
+			remaining := job.ExpiresAt.Sub(now)
+			url, err := h.exporter.PresignGet(c.Request.Context(), job.ObjectKey, remaining)
+			if err != nil {
+				c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to refresh export URL", "detail": err.Error()})
+				return
+			}
+			h.jobs.UpdateURL(id, url)
+			job.ExportURL = url
+		}
+	}
+
 	c.JSON(http.StatusOK, job)
 }
 
@@ -182,7 +203,7 @@ func (h *ExportHandler) runJob(jobID string, scene *model.Scene, takes [][]byte)
 	ctx, cancel := context.WithTimeout(context.Background(), exportJobTimeout)
 	defer cancel()
 
-	url, err := h.exporter.Run(ctx, job, scene, takes)
+	result, err := h.exporter.Run(ctx, job, scene, takes)
 	if err != nil {
 		log.Printf("export %s failed: %v", jobID, err)
 		h.jobs.Fail(jobID, err.Error())
@@ -192,9 +213,9 @@ func (h *ExportHandler) runJob(jobID string, scene *model.Scene, takes [][]byte)
 		return
 	}
 
-	h.jobs.Complete(jobID, url)
+	h.jobs.Complete(jobID, result.URL, result.ObjectKey, result.ExpiresAt)
 	if job.SessionID != "" {
-		_ = h.sessions.UpdateExport(job.SessionID, model.ExportStatusReady, url, "")
+		_ = h.sessions.UpdateExport(job.SessionID, model.ExportStatusReady, result.URL, "")
 	}
-	log.Printf("export %s ready: %s", jobID, url)
+	log.Printf("export %s ready (expires %s): %s", jobID, result.ExpiresAt.Format(time.RFC3339), result.ObjectKey)
 }

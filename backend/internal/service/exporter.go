@@ -39,7 +39,7 @@ func NewExporter(s3 *S3Store) *Exporter {
 
 func (e *Exporter) Ready() error {
 	if e == nil || e.s3 == nil {
-		return fmt.Errorf("S3 is not configured — set AWS_S3_BUCKET and credentials (backend/.idea/s3.md)")
+		return fmt.Errorf("S3 is not configured, set AWS_S3_BUCKET and credentials (backend/docs/s3-iam.md)")
 	}
 	if _, err := exec.LookPath("ffmpeg"); err != nil {
 		return fmt.Errorf("ffmpeg not found on PATH")
@@ -47,20 +47,20 @@ func (e *Exporter) Ready() error {
 	return nil
 }
 
-func (e *Exporter) Run(ctx context.Context, job *model.ExportJob, scene *model.Scene, takes [][]byte) (string, error) {
+func (e *Exporter) Run(ctx context.Context, job *model.ExportJob, scene *model.Scene, takes [][]byte) (*UploadResult, error) {
 	if err := e.Ready(); err != nil {
-		return "", err
+		return nil, err
 	}
 	if scene == nil {
-		return "", fmt.Errorf("scene is required")
+		return nil, fmt.Errorf("scene is required")
 	}
 	if len(takes) != len(scene.Chunks) {
-		return "", fmt.Errorf("got %d audio takes, scene has %d chunks", len(takes), len(scene.Chunks))
+		return nil, fmt.Errorf("got %d audio takes, scene has %d chunks", len(takes), len(scene.Chunks))
 	}
 
 	dir, err := os.MkdirTemp("", "voicely-export-*")
 	if err != nil {
-		return "", fmt.Errorf("temp dir: %w", err)
+		return nil, fmt.Errorf("temp dir: %w", err)
 	}
 	defer os.RemoveAll(dir)
 
@@ -69,35 +69,42 @@ func (e *Exporter) Run(ctx context.Context, job *model.ExportJob, scene *model.S
 	outPath := filepath.Join(dir, "out.mp4")
 
 	if err := e.download(ctx, scene.VideoURL, videoPath); err != nil {
-		return "", fmt.Errorf("download video: %w", err)
+		return nil, fmt.Errorf("download video: %w", err)
 	}
 	if err := e.download(ctx, scene.SoundtrackURL, soundtrackPath); err != nil {
-		return "", fmt.Errorf("download soundtrack: %w", err)
+		return nil, fmt.Errorf("download soundtrack: %w", err)
 	}
 
 	takePaths := make([]string, len(takes))
 	for i, data := range takes {
 		if len(data) == 0 {
-			return "", fmt.Errorf("audio take %d is empty", i)
+			return nil, fmt.Errorf("audio take %d is empty", i)
 		}
 		p := filepath.Join(dir, fmt.Sprintf("take_%02d%s", i, suffixForAudio(data)))
 		if err := os.WriteFile(p, data, 0o600); err != nil {
-			return "", fmt.Errorf("write take %d: %w", i, err)
+			return nil, fmt.Errorf("write take %d: %w", i, err)
 		}
 		takePaths[i] = p
 	}
 
 	if err := runFFmpeg(ctx, videoPath, soundtrackPath, takePaths, scene.Chunks, outPath); err != nil {
-		return "", err
+		return nil, err
 	}
 
 	key := fmt.Sprintf("exports/%s/%s.mp4", safePathPart(job.UserID), job.ID)
 	downloadName := fmt.Sprintf("voicely-%s.mp4", safePathPart(scene.ID))
-	url, err := e.s3.UploadMP4(ctx, key, outPath, downloadName)
+	result, err := e.s3.UploadMP4(ctx, key, outPath, downloadName)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return url, nil
+	return result, nil
+}
+
+func (e *Exporter) PresignGet(ctx context.Context, key string, ttl time.Duration) (string, error) {
+	if e == nil || e.s3 == nil {
+		return "", fmt.Errorf("S3 is not configured")
+	}
+	return e.s3.PresignGet(ctx, key, ttl)
 }
 
 func (e *Exporter) download(ctx context.Context, url, dest string) error {

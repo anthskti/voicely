@@ -97,9 +97,10 @@ export default function LibraryPage() {
                       <h3 className="font-display text-lg font-bold text-white">
                         Scene: {sess.scene_id}
                       </h3>
-                      <p className="text-xs text-[#93BADF] font-mono mt-0.5">
+                      {/* debugging scene id */}
+                      {/* <p className="text-xs text-[#93BADF] font-mono mt-0.5">
                         Session ID: {sess.id}
-                      </p>
+                      </p> */}
                       <span className="text-[11px] text-[#EDEFF1]/50">
                         {new Date(sess.created_at).toLocaleString()}
                       </span>

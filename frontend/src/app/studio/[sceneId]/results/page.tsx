@@ -116,6 +116,9 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
           if (job.status === "failed") {
             throw new Error(job.error || "Export failed");
           }
+          if (job.status === "expired") {
+            throw new Error(job.error || "Export link expired, Get a new clip");
+          }
           await new Promise((r) => setTimeout(r, 2000));
         }
         if (!cancelled) {
@@ -302,9 +305,10 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
                     <h1 className="font-display text-3xl font-extrabold text-white mt-1">
                       {scene?.title || sceneId}
                     </h1>
-                    <p className="text-xs text-[#EDEFF1]/70 mt-1">
+                    {/* session id debugging */}
+                    {/* <p className="text-xs text-[#EDEFF1]/70 mt-1">
                       Session ID: {gradeResult.session_id}
-                    </p>
+                    </p> */}
                   </div>
                 </div>
 
@@ -326,12 +330,12 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
                   >
                     TRY AGAIN
                   </Link>
-                  <Link
+                  {/* <Link
                     href="/scenes"
                     className="rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-xs font-semibold text-[#EDEFF1]/80 hover:bg-white/10 uppercase tracking-wider"
                   >
                     CAROUSEL
-                  </Link>
+                  </Link> */}
                 </div>
               </div>
 

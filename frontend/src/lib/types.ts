@@ -49,7 +49,8 @@ export type Session = {
 
 export type ExportJob = {
   export_id: string;
-  status: "processing" | "ready" | "failed";
+  status: "processing" | "ready" | "failed" | "expired";
   export_url?: string;
+  expires_at?: string;
   error?: string;
 };

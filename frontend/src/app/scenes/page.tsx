@@ -13,18 +13,23 @@ export default function ScenesPage() {
   const [scenes, setScenes] = useState<Scene[]>([]);
   const [selectedScene, setSelectedScene] = useState<Scene | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
   const { data: session } = useSession();
 
   useEffect(() => {
-    getScenes().then((data) => {
-      setScenes(data);
-      if (data.length > 0) {
-        setSelectedScene(data[0]);
-      }
-      setLoading(false);
-    });
+    getScenes()
+      .then((data) => {
+        setScenes(data);
+        if (data.length > 0) {
+          setSelectedScene(data[0]);
+        }
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : "Failed to load scenes");
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const handleEnterStudio = () => {
@@ -86,9 +91,18 @@ export default function ScenesPage() {
 
         {/* LEFT PANEL: Selected Scene Details */}
         <div className="lg:col-span-6 flex flex-col justify-between glass-panel p-6 sm:p-8 rounded-3xl border border-[#93BADF]/25 bg-[#1d1e27]/85 backdrop-blur-2xl shadow-2xl">
-          {loading || !selectedScene ? (
+          {loading ? (
             <div className="flex flex-col items-center justify-center h-96">
               <div className="h-10 w-10 animate-spin rounded-full border-4 border-[#93BADF] border-t-transparent" />
+            </div>
+          ) : error ? (
+            <div className="flex flex-col items-center justify-center h-96 gap-3 text-center">
+              <p className="font-mono text-sm text-[#EDEFF1]/70">Couldn’t load scenes from the API.</p>
+              <p className="font-mono text-xs text-[#93BADF]">{error}</p>
+            </div>
+          ) : !selectedScene ? (
+            <div className="flex flex-col items-center justify-center h-96">
+              <p className="font-mono text-sm text-[#EDEFF1]/70">No scenes seeded yet.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-6">
@@ -121,15 +135,16 @@ export default function ScenesPage() {
                   <span className="rounded-full border border-[#93BADF]/40 bg-[#93BADF]/15 px-3 py-0.5 text-xs font-semibold text-[#93BADF]">
                     {selectedScene.difficulty}
                   </span>
-                  <span className="text-xs font-mono text-[#EDEFF1]/50">
+                  {/* debugging scene id */}
+                  {/* <span className="text-xs font-mono text-[#EDEFF1]/50">
                     ID: {selectedScene.id}
-                  </span>
+                  </span> */}
                 </div>
                 <h1 className="font-display text-3xl sm:text-4xl font-black text-white leading-tight">
                   {selectedScene.title}
                 </h1>
                 <p className="text-xs text-[#EDEFF1]/70 mt-3 leading-relaxed">
-                  Practice voice acting line-by-line. Listen to reference takes, record your microphone takes, and get AI pitch, cadence, and timbre feedback.
+                  Practice voice acting line-by-line.
                 </p>
               </div>
 
@@ -138,7 +153,7 @@ export default function ScenesPage() {
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#93BADF]">
                   Dialogue Preview
                 </span>
-                <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                <div className="space-y-1.5 max-h-40 overflow-y-auto pr-1">
                   {selectedScene.chunks.slice(0, 3).map((chunk) => (
                     <div
                       key={chunk.index}
@@ -149,7 +164,7 @@ export default function ScenesPage() {
                     </div>
                   ))}
                   {selectedScene.chunks.length > 3 && (
-                    <div className="text-[10px] text-[#EDEFF1]/50 italic pl-1">
+                    <div className="text-[12px] text-[#EDEFF1]/50 italic pl-1 pb-2">
                       + {selectedScene.chunks.length - 3} more dialogue lines in studio
                     </div>
                   )}
@@ -165,7 +180,7 @@ export default function ScenesPage() {
               disabled={loading || !selectedScene}
               className="w-full flex items-center justify-center gap-2 rounded-2xl bg-[#93BADF] py-4 text-base font-bold text-[#262733] shadow-xl shadow-[#93BADF]/20 hover:bg-white hover:scale-105 active:scale-95 transition-all tracking-wider uppercase disabled:opacity-50"
             >
-              ENTER STUDIO →
+              ENTER STUDIO
             </button>
           </div>
         </div>
@@ -174,7 +189,7 @@ export default function ScenesPage() {
         <div className="lg:col-span-6 flex flex-col gap-4">
           <div className="flex items-center justify-between px-2">
             <span className="text-xs font-mono uppercase tracking-widest text-[#93BADF]">
-              Available Beatmaps / Scenes ({scenes.length})
+              Available Scenes ({scenes.length})
             </span>
             <span className="text-[11px] font-mono text-[#EDEFF1]/50">
               Click a scene to preview

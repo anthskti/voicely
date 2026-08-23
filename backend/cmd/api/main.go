@@ -55,12 +55,12 @@ func main() {
 
 	v1 := r.Group("/api/v1")
 	{
-		v1.POST("/grade", gradeHandler.HandleGradeSubmission)
+		v1.POST("/grade", middleware.GradeLimiter.Middleware(), gradeHandler.HandleGradeSubmission)
 		v1.GET("/scenes", sceneHandler.ListScenes)
 		v1.GET("/scenes/:id", sceneHandler.GetScene)
 		v1.POST("/sessions", sessionHandler.CreateSession)
 		v1.GET("/sessions", sessionHandler.ListSessions)
-		v1.POST("/export", exportHandler.StartExport)
+		v1.POST("/export", middleware.ExportLimiter.Middleware(), exportHandler.StartExport)
 		v1.GET("/exports/:id", exportHandler.GetExport)
 	}
 

@@ -1,7 +1,8 @@
 {
   "id": "scene_valorant",
   "title": "Valorant — Phoenix Clutch",
-  "difficulty": "medium",
+  "difficulty": "Intermediate",
+  "thumbnail_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/thumbnail.png",
   "video_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/video.mp4",
   "soundtrack_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/soundtrack.mp3",
   "vocals_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/vocals.mp3",
@@ -37,13 +38,13 @@
     {
       "index": 4,
       "start_time_sec": 11.4,
-      "end_time_sec": 12.0,
+      "end_time_sec": 12.4,
       "transcript": "Are you certain?",
       "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_04.wav"
     },
     {
       "index": 5,
-      "start_time_sec": 12.0,
+      "start_time_sec": 12.4,
       "end_time_sec": 15.9,
       "transcript": "One hundred, I got this.",
       "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_valorant/refs/chunk_05.wav"

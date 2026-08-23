@@ -2,6 +2,7 @@ package service
 
 import (
 	"sync"
+	"time"
 
 	"github.com/anthskti/voicely/internal/model"
 )
@@ -30,15 +31,22 @@ func (s *ExportJobStore) Get(id string) (*model.ExportJob, bool) {
 		return nil, false
 	}
 	copy := *job
+	if job.ExpiresAt != nil {
+		t := *job.ExpiresAt
+		copy.ExpiresAt = &t
+	}
 	return &copy, true
 }
 
-func (s *ExportJobStore) Complete(id, url string) {
+func (s *ExportJobStore) Complete(id, url, objectKey string, expiresAt time.Time) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 	if job, ok := s.jobs[id]; ok {
 		job.Status = model.ExportStatusReady
 		job.ExportURL = url
+		job.ObjectKey = objectKey
+		t := expiresAt.UTC()
+		job.ExpiresAt = &t
 		job.Error = ""
 	}
 }
@@ -49,5 +57,23 @@ func (s *ExportJobStore) Fail(id, errMsg string) {
 	if job, ok := s.jobs[id]; ok {
 		job.Status = model.ExportStatusFailed
 		job.Error = errMsg
+	}
+}
+
+func (s *ExportJobStore) MarkExpired(id string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if job, ok := s.jobs[id]; ok {
+		job.Status = model.ExportStatusExpired
+		job.ExportURL = ""
+		job.Error = "export link expired"
+	}
+}
+
+func (s *ExportJobStore) UpdateURL(id, url string) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if job, ok := s.jobs[id]; ok {
+		job.ExportURL = url
 	}
 }

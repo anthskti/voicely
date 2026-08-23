@@ -22,7 +22,14 @@ Do **not** send video or soundtrack. Go fetches them from the scene row.
 `GET /api/v1/exports/:id`:
 
 ```json
-{ "export_id": "…", "status": "ready", "export_url": "https://….s3.us-east-2.amazonaws.com/exports/…" }
+{
+  "export_id": "…",
+  "status": "ready",
+  "export_url": "https://….amazonaws.com/exports/…?X-Amz-…",
+  "expires_at": "2026-08-23T04:00:00Z"
+}
 ```
 
-`status` is `processing` | `ready` | `failed`.
+`export_url` is a **presigned GET** (private object). Access and object lifetime are capped at **1 hour** from creation (`expires_at`). Polling refreshes the signature until then; after that `status` becomes `expired` (`410 Gone`).
+
+`status` is `processing` | `ready` | `failed` | `expired`.

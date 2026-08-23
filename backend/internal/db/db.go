@@ -33,6 +33,6 @@ func Open(databaseURL string) (*gorm.DB, error) {
 		return nil, fmt.Errorf("auto migrate: %w", err)
 	}
 
-	log.Println("database connected and migrated")
+	log.Println("database connected and pushed")
 	return gdb, nil
 }
