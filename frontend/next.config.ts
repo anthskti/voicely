@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const goBackend = (
+  process.env.GO_BACKEND_URL ||
   process.env.NEXT_PUBLIC_GO_BACKEND_URL ||
   "http://localhost:8080"
 );
