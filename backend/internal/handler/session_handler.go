@@ -5,6 +5,7 @@ import (
 	"slices"
 	"strings"
 
+	"github.com/anthskti/voicely/internal/middleware"
 	"github.com/anthskti/voicely/internal/model"
 	"github.com/anthskti/voicely/internal/repository"
 	"github.com/gin-gonic/gin"
@@ -31,10 +32,13 @@ func (h *SessionHandler) CreateSession(c *gin.Context) {
 	req.SceneID = strings.TrimSpace(req.SceneID)
 	req.OverallGrade = strings.TrimSpace(req.OverallGrade)
 
-	if req.UserID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
 		return
 	}
+	req.UserID = userID
+
 	if req.SceneID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "scene_id is required"})
 		return
@@ -85,9 +89,14 @@ func (h *SessionHandler) CreateSession(c *gin.Context) {
 	c.JSON(http.StatusCreated, session)
 }
 
-// lists all sessions for 1 user
+// lists all sessions for the authenticated user
 func (h *SessionHandler) ListSessions(c *gin.Context) {
-	userID := strings.TrimSpace(c.Query("user_id"))
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
+		return
+	}
+
 	sceneID := strings.TrimSpace(c.Query("scene_id"))
 
 	sessions, err := h.sessions.List(userID, sceneID)

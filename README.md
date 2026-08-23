@@ -64,11 +64,11 @@ cd frontend && bun install && cd ..
 
 ```
 NEXT_PUBLIC_GO_BACKEND_URL=http://localhost:8080
-BETTER_AUTH_URL=http://localhost:3000
-BETTER_AUTH_SECRET=<random string>
 ```
 
-Compose injects Go’s `GRADER_SERVICE_URL` to `http://grader:8000/evaluate`. You do not need Postgres for the current grade proxy.
+`backend/.env` should include `FRONTEND_ORIGIN=http://localhost:3000` and `AUTH_COOKIE_SECURE=false` for local cookie auth.
+
+Compose injects Go’s `GRADER_SERVICE_URL` to `http://grader:8000/evaluate`. Postgres is required for scenes, users, and practice sessions.
 
 ## Run
 

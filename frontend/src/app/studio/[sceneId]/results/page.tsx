@@ -9,11 +9,12 @@ import { GradeDisplay } from "@/components/GradeDisplay";
 import { getScene, submitSessionForGrading, saveSession, startExport, getExport } from "@/lib/api";
 import { Scene, GradeResponse } from "@/lib/types";
 import { useSession } from "@/lib/auth-client";
+import { sessionAudioKey } from "@/lib/session-audio";
 
 export default function ResultsPage({ params }: { params: Promise<{ sceneId: string }> }) {
   const { sceneId } = use(params);
   const router = useRouter();
-  const { data: authSession } = useSession();
+  const { data: authSession, isPending: authPending } = useSession();
 
   const [scene, setScene] = useState<Scene | null>(null);
   const [gradeResult, setGradeResult] = useState<GradeResponse | null>(null);
@@ -28,13 +29,15 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
   const [exportNonce, setExportNonce] = useState(0);
 
   useEffect(() => {
+    if (authPending || !authSession?.user) return;
+
     async function evaluateTakes() {
       try {
         const sceneData = await getScene(sceneId);
         setScene(sceneData);
 
         // Retrieve recorded blob Data URLs from sessionStorage
-        const stored = sessionStorage.getItem(`voicely_session_${sceneId}`);
+        const stored = sessionStorage.getItem(sessionAudioKey(sceneId));
         if (!stored) {
           throw new Error("No recorded takes found in session. Please record first.");
         }
@@ -48,12 +51,8 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
         );
         setRecordedBlobs(blobs);
 
-        const userId = authSession?.user?.id || "guest_user_proto";
-
-        // Submit to Go backend grading endpoint
         const gradeRes = await submitSessionForGrading(
           sceneId,
-          userId,
           sceneData.chunks.map((c) => ({
             transcript: c.transcript,
             reference_audio_url: c.reference_audio_url,
@@ -72,14 +71,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
     }
 
     evaluateTakes();
-  }, [sceneId, authSession?.user?.id]);
+  }, [sceneId, authPending, authSession?.user]);
 
   const handleSaveSession = async () => {
     if (!gradeResult || saving) return;
     setSaving(true);
     try {
       await saveSession({
-        user_id: authSession?.user?.id || "guest_user_proto",
         scene_id: sceneId,
         overall_grade: gradeResult.overall_grade,
         overall_score_raw: gradeResult.overall_score_raw,
@@ -97,14 +95,13 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
     if (!gradeResult || recordedBlobs.length === 0) return;
 
     let cancelled = false;
-    const userId = authSession?.user?.id || "guest_user_proto";
     const takes = recordedBlobs;
 
     async function muxClip() {
       setExportStatus("processing");
       setExportError("");
       try {
-        const started = await startExport(sceneId, userId, takes);
+        const started = await startExport(sceneId, takes);
         const deadline = Date.now() + 180_000;
         while (!cancelled && Date.now() < deadline) {
           const job = await getExport(started.export_id);

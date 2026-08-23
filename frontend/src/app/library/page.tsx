@@ -15,15 +15,18 @@ export default function LibraryPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (authSession?.user?.id) {
-      getUserSessions(authSession.user.id).then((data) => {
+    if (!authSession?.user) return;
+
+    getUserSessions()
+      .then((data) => {
         setSessions(Array.isArray(data) ? data : []);
         setLoading(false);
+      })
+      .catch(() => {
+        setSessions([]);
+        setLoading(false);
       });
-    } else {
-      setLoading(false);
-    }
-  }, [authSession?.user?.id]);
+  }, [authSession?.user]);
 
   return (
     <div className="flex min-h-screen bg-[#262733] text-[#EDEFF1] relative scanline-bg">
@@ -52,19 +55,6 @@ export default function LibraryPage() {
               {[1, 2, 3].map((i) => (
                 <div key={i} className="h-24 rounded-2xl bg-[#1d1e27] animate-pulse" />
               ))}
-            </div>
-          ) : !authSession?.user ? (
-            <div className="glass-card p-12 text-center rounded-3xl border border-[#93BADF]/20 max-w-md mx-auto my-12">
-              <h3 className="font-display text-2xl font-bold text-white mb-2">Log In to View Library</h3>
-              <p className="text-xs text-[#EDEFF1]/70 mb-6">
-                Track your voice acting improvements and save your session scorecards.
-              </p>
-              <Link
-                href="/login?redirect=/library"
-                className="inline-block rounded-xl bg-[#93BADF] px-6 py-2.5 text-sm font-bold text-[#262733] shadow-md shadow-[#93BADF]/20 hover:bg-white transition-all uppercase tracking-wider"
-              >
-                Log In
-              </Link>
             </div>
           ) : !Array.isArray(sessions) || sessions.length === 0 ? (
             <div className="glass-card p-12 text-center rounded-3xl border border-[#93BADF]/15 max-w-lg mx-auto my-12">

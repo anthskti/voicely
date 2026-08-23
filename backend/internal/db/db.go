@@ -29,7 +29,7 @@ func Open(databaseURL string) (*gorm.DB, error) {
 		return nil, fmt.Errorf("ping database: %w", err)
 	}
 
-	if err := gdb.AutoMigrate(&model.Scene{}, &model.Session{}); err != nil {
+	if err := gdb.AutoMigrate(&model.Scene{}, &model.Session{}, &model.User{}, &model.AuthSession{}); err != nil {
 		return nil, fmt.Errorf("auto migrate: %w", err)
 	}
 

@@ -41,6 +41,8 @@ services:
       PORT: "8080"
       GRADER_SERVICE_URL: http://grader:8000/evaluate
       DATABASE_URL: postgres://voicely:voicely@postgres:5432/voicely?sslmode=disable
+      FRONTEND_ORIGIN: http://localhost:3000
+      AUTH_COOKIE_SECURE: "false"
       AWS_REGION: ${AWS_REGION:-us-east-2}
       AWS_S3_BUCKET: ${AWS_S3_BUCKET:-voicely-proto-0821}
       AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}

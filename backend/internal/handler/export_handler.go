@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/anthskti/voicely/internal/middleware"
 	"github.com/anthskti/voicely/internal/model"
 	"github.com/anthskti/voicely/internal/repository"
 	"github.com/anthskti/voicely/internal/service"
@@ -53,14 +54,15 @@ func (h *ExportHandler) StartExport(c *gin.Context) {
 	}
 
 	sceneID := strings.TrimSpace(c.PostForm("scene_id"))
-	userID := strings.TrimSpace(c.PostForm("user_id"))
 	sessionID := strings.TrimSpace(c.PostForm("session_id"))
 	if sceneID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "scene_id is required"})
 		return
 	}
-	if userID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
 		return
 	}
 
@@ -75,12 +77,17 @@ func (h *ExportHandler) StartExport(c *gin.Context) {
 	}
 
 	if sessionID != "" {
-		if _, err := h.sessions.GetByID(sessionID); err != nil {
+		practiceSession, err := h.sessions.GetByID(sessionID)
+		if err != nil {
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				c.JSON(http.StatusBadRequest, gin.H{"error": "session_id not found"})
 				return
 			}
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "failed to load session", "detail": err.Error()})
+			return
+		}
+		if practiceSession.UserID != userID {
+			c.JSON(http.StatusForbidden, gin.H{"error": "session does not belong to user"})
 			return
 		}
 	}
@@ -157,10 +164,21 @@ func (h *ExportHandler) StartExport(c *gin.Context) {
 }
 
 func (h *ExportHandler) GetExport(c *gin.Context) {
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
+		return
+	}
+
 	id := strings.TrimSpace(c.Param("id"))
 	job, ok := h.jobs.Get(id)
 	if !ok {
 		c.JSON(http.StatusNotFound, gin.H{"error": "export not found", "detail": "job expired or unknown — retry POST /api/v1/export"})
+		return
+	}
+
+	if job.UserID != userID {
+		c.JSON(http.StatusForbidden, gin.H{"error": "export does not belong to user"})
 		return
 	}
 

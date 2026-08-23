@@ -5,6 +5,7 @@ import (
 	"io"
 	"net/http"
 
+	"github.com/anthskti/voicely/internal/middleware"
 	"github.com/anthskti/voicely/internal/model"
 	"github.com/anthskti/voicely/internal/service"
 	"github.com/gin-gonic/gin"
@@ -29,13 +30,14 @@ func (h *GraderHandler) HandleGradeSubmission(c *gin.Context) {
 	}
 
 	sceneID := c.PostForm("scene_id")
-	userID := c.PostForm("user_id")
 	if sceneID == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "scene_id is required"})
 		return
 	}
-	if userID == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "user_id is required"})
+
+	userID, ok := middleware.GetUserID(c)
+	if !ok {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})
 		return
 	}
 

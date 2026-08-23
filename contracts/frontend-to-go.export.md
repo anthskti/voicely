@@ -7,7 +7,6 @@ Starts an async FFmpeg job. Poll `GET /api/v1/exports/:id`.
 | Field | Type | Notes |
 |-------|------|-------|
 | `scene_id` | text | Go loads video + soundtrack + chunk timings from Postgres |
-| `user_id` | text | Used in the S3 key `exports/{user_id}/{export_id}.mp4` |
 | `session_id` | text, optional | If set, `sessions.export_url` is updated when ready |
 | `audio_chunks` | file, repeated | Same takes as grade; length must equal scene chunk count |
 

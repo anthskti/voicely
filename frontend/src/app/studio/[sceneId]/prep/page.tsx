@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { getScene } from "@/lib/api";
 import { Scene } from "@/lib/types";
 import { ProgressBar } from "@/components/ProgressBar";
+import { clearSessionAudio } from "@/lib/session-audio";
 
 export default function PrepPage({ params }: { params: Promise<{ sceneId: string }> }) {
   const { sceneId } = use(params);
@@ -21,6 +22,7 @@ export default function PrepPage({ params }: { params: Promise<{ sceneId: string
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    clearSessionAudio(sceneId);
     getScene(sceneId)
       .then((data) => {
         setScene(data);

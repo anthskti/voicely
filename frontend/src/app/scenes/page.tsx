@@ -8,6 +8,7 @@ import { SceneCard } from "@/components/SceneCard";
 import { getScenes } from "@/lib/api";
 import { Scene } from "@/lib/types";
 import { useSession } from "@/lib/auth-client";
+import { clearSessionAudio } from "@/lib/session-audio";
 
 export default function ScenesPage() {
   const [scenes, setScenes] = useState<Scene[]>([]);
@@ -19,6 +20,7 @@ export default function ScenesPage() {
   const { data: session } = useSession();
 
   useEffect(() => {
+    clearSessionAudio();
     getScenes()
       .then((data) => {
         setScenes(data);

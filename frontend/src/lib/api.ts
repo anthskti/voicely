@@ -1,10 +1,16 @@
 import { Scene, GradeResponse, Session, ExportJob } from "./types";
 
 const GO_BACKEND_URL =
-  process.env.NEXT_PUBLIC_GO_BACKEND_URL || "https://voicely-api-72hu.onrender.com";
+  process.env.NEXT_PUBLIC_GO_BACKEND_URL || "http://localhost:8080";
+
+const apiFetch = (input: string, init?: RequestInit) =>
+  fetch(input, {
+    ...init,
+    credentials: "include",
+  });
 
 export async function getScenes(): Promise<Scene[]> {
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/scenes`, {
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/scenes`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -17,7 +23,7 @@ export async function getScenes(): Promise<Scene[]> {
 }
 
 export async function getScene(id: string): Promise<Scene> {
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/scenes/${id}`, {
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/scenes/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -28,13 +34,11 @@ export async function getScene(id: string): Promise<Scene> {
 
 export async function submitSessionForGrading(
   sceneId: string,
-  userId: string,
   chunks: Array<{ transcript: string; reference_audio_url: string }>,
   recordedBlobs: Blob[]
 ): Promise<GradeResponse> {
   const form = new FormData();
   form.append("scene_id", sceneId);
-  form.append("user_id", userId);
 
   for (const c of chunks) {
     form.append("chunk_transcripts", c.transcript);
@@ -45,7 +49,7 @@ export async function submitSessionForGrading(
     form.append("audio_chunks", blob, "take.webm");
   }
 
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/grade`, {
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/grade`, {
     method: "POST",
     body: form,
   });
@@ -63,63 +67,45 @@ export async function submitSessionForGrading(
 }
 
 export async function saveSession(payload: {
-  user_id: string;
   scene_id: string;
   overall_grade: string;
   overall_score_raw: number;
   export_url?: string;
 }): Promise<Session> {
-  try {
-    const res = await fetch(`${GO_BACKEND_URL}/api/v1/sessions`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!res.ok) {
-      console.warn("Save session returned non-200, creating local session object.");
-      return {
-        id: `sess_local_${Date.now()}`,
-        created_at: new Date().toISOString(),
-        ...payload,
-      };
-    }
-    return await res.json();
-  } catch (err) {
-    console.warn("Failed to save session via Go backend, mock saved locally:", err);
-    return {
-      id: `sess_local_${Date.now()}`,
-      created_at: new Date().toISOString(),
-      ...payload,
-    };
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/sessions`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || err.detail || `Save session failed (${res.status})`);
   }
+  return await res.json();
 }
 
-export async function getUserSessions(userId: string): Promise<Session[]> {
-  try {
-    const res = await fetch(`${GO_BACKEND_URL}/api/v1/sessions?user_id=${encodeURIComponent(userId)}`, {
-      cache: "no-store",
-    });
-    if (!res.ok) return [];
-    const data = await res.json();
-    if (Array.isArray(data)) return data;
-    if (data && Array.isArray(data.sessions)) return data.sessions;
-    if (data && Array.isArray(data.data)) return data.data;
-    return [];
-  } catch (err) {
-    console.warn("Failed to fetch sessions for user:", err);
-    return [];
+export async function getUserSessions(): Promise<Session[]> {
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/sessions`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    if (res.status === 401) return [];
+    throw new Error(`Failed to fetch sessions (${res.status})`);
   }
+  const data = await res.json();
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.sessions)) return data.sessions;
+  if (data && Array.isArray(data.data)) return data.data;
+  return [];
 }
 
 export async function startExport(
   sceneId: string,
-  userId: string,
   recordedBlobs: Blob[],
   sessionId?: string
 ): Promise<ExportJob> {
   const form = new FormData();
   form.append("scene_id", sceneId);
-  form.append("user_id", userId);
   if (sessionId) {
     form.append("session_id", sessionId);
   }
@@ -127,7 +113,7 @@ export async function startExport(
     form.append("audio_chunks", blob, "take.webm");
   }
 
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/export`, {
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/export`, {
     method: "POST",
     body: form,
   });
@@ -146,7 +132,7 @@ export async function startExport(
 }
 
 export async function getExport(exportId: string): Promise<ExportJob> {
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/exports/${exportId}`, {
+  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/exports/${exportId}`, {
     cache: "no-store",
   });
   const data = await res.json().catch(() => ({}));

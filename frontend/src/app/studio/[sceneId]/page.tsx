@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { getScene } from "@/lib/api";
 import { Scene, Chunk } from "@/lib/types";
 import { WaveformVisualizer } from "@/components/WaveformVisualizer";
+import { sessionAudioKey } from "@/lib/session-audio";
 
 type StudioState = "idle" | "playing_ref" | "countdown" | "recording" | "playing_take";
 
@@ -294,7 +295,7 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
           )
         );
 
-        sessionStorage.setItem(`voicely_session_${sceneId}`, JSON.stringify(blobDataUrls));
+        sessionStorage.setItem(sessionAudioKey(sceneId), JSON.stringify(blobDataUrls));
         router.push(`/studio/${sceneId}/results`);
       } catch (err) {
         console.error("Failed to package recorded takes:", err);
