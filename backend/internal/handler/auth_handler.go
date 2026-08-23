@@ -175,14 +175,9 @@ func (h *AuthHandler) clearSessionCookie(c *gin.Context) {
 }
 
 func (h *AuthHandler) writeSessionCookie(c *gin.Context, token string, maxAge int) {
-	// Cross-site (Vercel → Render) needs None+Secure. Localhost:3000 → :8080 is same-site,
-	// so Lax+insecure works. None without Secure is rejected by Chrome, which looks like
-	// "signed in" from the login JSON while later API calls have no cookie.
-	sameSite := http.SameSiteLaxMode
-	if h.cfg.AuthCookieSecure {
-		sameSite = http.SameSiteNoneMode
-	}
-
+	// Cookie is first-party: the browser talks to the Next.js origin, which
+	// rewrites /api/v1 to this API. Lax works on iOS Safari. None+Secure is
+	// required only for true cross-site cookies, which Safari blocks anyway.
 	http.SetCookie(c.Writer, &http.Cookie{
 		Name:     service.SessionCookieName,
 		Value:    token,
@@ -190,6 +185,6 @@ func (h *AuthHandler) writeSessionCookie(c *gin.Context, token string, maxAge in
 		MaxAge:   maxAge,
 		HttpOnly: true,
 		Secure:   h.cfg.AuthCookieSecure,
-		SameSite: sameSite,
+		SameSite: http.SameSiteLaxMode,
 	})
 }

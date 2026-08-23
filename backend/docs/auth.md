@@ -1,6 +1,6 @@
 # Auth (Go session cookies)
 
-Users, passwords, and login sessions live in **Postgres on the Go API**. The Next.js frontend has no auth database. It is a thin client: `credentials: "include"` on every API call.
+Users, passwords, and login sessions live in **Postgres on the Go API**. The Next.js frontend has no auth database. The browser calls **same-origin** `/api/v1/...` (`credentials: "include"`). Next.js rewrites that path to the Go API so the session cookie is first-party.
 
 This is **not JWT**. Login issues an opaque `voicely_session` httpOnly cookie. Go looks up that token (hashed) in `auth_sessions` on each protected request.
 
@@ -32,7 +32,7 @@ Practice recordings stay in `sessions` with `user_id` taken from the auth cookie
 
 ## Endpoints
 
-All under `/api/v1/auth`. Cookie is set on signup/login; send it back with `credentials: "include"`.
+All under `/api/v1/auth` (browser: same host as the Next app; Next rewrites to Go). Cookie is set on signup/login; send it back with `credentials: "include"`.
 
 | Method | Path | Body | Success |
 |--------|------|------|---------|
@@ -52,11 +52,11 @@ Name: `voicely_session`
 | HttpOnly | yes | yes |
 | Path | `/` | `/` |
 | Secure | no | yes |
-| SameSite | `Lax` | `None` |
+| SameSite | `Lax` | `Lax` |
 
-`localhost:3000` → `localhost:8080` is same-site (ports do not count), so **Lax** works locally.
+Do **not** have the browser call the API host directly. Two Render URLs (`app.onrender.com` vs `api.onrender.com`) are **cross-site**: `onrender.com` is on the public suffix list, so each service is its own site. iOS Safari blocks that cookie even with `SameSite=None; Secure`. Login JSON still looks signed-in, then `GET /me` fails with “session cookie was blocked.”
 
-Vercel frontend + Render API is **cross-site**. That needs **None + Secure**. Chrome **rejects** `SameSite=None` without `Secure`. If that happens, login JSON still looks signed-in but `/grade` returns `401 authentication required`.
+The Next rewrite (`/api/v1/:path*` → Go) makes `Set-Cookie` apply to the **frontend** Render origin, so **Lax** works on mobile.
 
 After login, the frontend calls `GET /me` to confirm the cookie actually stuck.
 
@@ -85,19 +85,20 @@ Handlers **do not trust client `user_id`**. They use `middleware.GetUserID`.
 | Variable | Local | Prod |
 |----------|--------|------|
 | `DATABASE_URL` | compose Postgres | Render Postgres |
-| `FRONTEND_ORIGIN` | `http://localhost:3000` | Vercel origin, e.g. `https://your-app.vercel.app` |
+| `FRONTEND_ORIGIN` | `http://localhost:3000` | Frontend Render origin, e.g. `https://voicely-web.onrender.com` |
 | `AUTH_COOKIE_SECURE` | `false` | `true` |
 
 If `AUTH_COOKIE_SECURE` is unset and `FRONTEND_ORIGIN` starts with `https://`, Secure cookies are turned on automatically.
 
-Frontend only needs `NEXT_PUBLIC_GO_BACKEND_URL`. No `DATABASE_URL`, no Better Auth secrets.
+Frontend rewrite target: `GO_BACKEND_URL` or `NEXT_PUBLIC_GO_BACKEND_URL` (build-time, used in `next.config.ts`) = the **API** Render origin. The browser should only hit `/api/v1` on the **frontend** host. No `DATABASE_URL`, no Better Auth secrets.
 
 ## Deploy checklist
 
-1. Set `FRONTEND_ORIGIN` to the exact Vercel origin (scheme + host, no trailing slash).
-2. Set `AUTH_COOKIE_SECURE=true` on the API.
-3. Rebuild/restart the API so CORS and cookie flags match.
-4. Existing in-memory Better Auth users do not migrate; people sign up again.
+1. Set `FRONTEND_ORIGIN` on the API to the exact frontend Render origin (scheme + host, no trailing slash).
+2. Set `AUTH_COOKIE_SECURE=true` on the API (HTTPS cookie, stored on the frontend host).
+3. Set `GO_BACKEND_URL` (or `NEXT_PUBLIC_GO_BACKEND_URL`) on the **frontend** Render service to the API origin and redeploy Next so rewrites point at Go.
+4. Rebuild/restart the API so cookie flags match.
+5. Existing in-memory Better Auth users do not migrate; people sign up again.
 
 ## Code map
 

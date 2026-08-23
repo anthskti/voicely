@@ -124,7 +124,7 @@ curl -s http://localhost:8080/healthz
 
 ## Deploy
 
-`render.yaml` — public `voicely-api`, private `voicely-grader`. Point `NEXT_PUBLIC_GO_BACKEND_URL` at the Render API URL.
+`render.yaml` — public `voicely-api`, private `voicely-grader`. Frontend is a separate Render web service. Set `GO_BACKEND_URL` (or `NEXT_PUBLIC_GO_BACKEND_URL`) on the frontend to the API origin so Next rewrites `/api/v1` there. The browser must call `/api/v1` on the frontend host — two `*.onrender.com` URLs are cross-site, which breaks login cookies on iOS.
 
 ## License
 

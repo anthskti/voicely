@@ -2,8 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const GO_BACKEND_URL =
-  process.env.NEXT_PUBLIC_GO_BACKEND_URL || "http://localhost:8080";
+const API_BASE = "/api/v1";
 
 export type AuthUser = {
   id: string;
@@ -36,7 +35,7 @@ async function parseAuthError(res: Response): Promise<AuthError> {
 }
 
 async function fetchMe(): Promise<SessionData | null> {
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/auth/me`, {
+  const res = await fetch(`${API_BASE}/auth/me`, {
     credentials: "include",
     cache: "no-store",
   });
@@ -132,7 +131,7 @@ export function useSession() {
 }
 
 async function postAuth(path: string, body: Record<string, string>): Promise<AuthResult> {
-  const res = await fetch(`${GO_BACKEND_URL}/api/v1/auth/${path}`, {
+  const res = await fetch(`${API_BASE}/auth/${path}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "include",
@@ -151,7 +150,7 @@ async function postAuth(path: string, body: Record<string, string>): Promise<Aut
     return {
       error: {
         message:
-          "Signed in, but the session cookie was blocked. For local http use AUTH_COOKIE_SECURE=false and rebuild the API. For Vercel+Render set AUTH_COOKIE_SECURE=true.",
+          "Signed in, but the session cookie was blocked. Server side issue.",
       },
     };
   }
@@ -183,7 +182,7 @@ export const signUp = {
 };
 
 export async function signOut(): Promise<void> {
-  await fetch(`${GO_BACKEND_URL}/api/v1/auth/logout`, {
+  await fetch(`${API_BASE}/auth/logout`, {
     method: "POST",
     credentials: "include",
   }).catch(() => undefined);

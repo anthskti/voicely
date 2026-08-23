@@ -1,7 +1,6 @@
 import { Scene, GradeResponse, Session, ExportJob } from "./types";
 
-const GO_BACKEND_URL =
-  process.env.NEXT_PUBLIC_GO_BACKEND_URL || "http://localhost:8080";
+const API_BASE = "/api/v1";
 
 const apiFetch = (input: string, init?: RequestInit) =>
   fetch(input, {
@@ -10,7 +9,7 @@ const apiFetch = (input: string, init?: RequestInit) =>
   });
 
 export async function getScenes(): Promise<Scene[]> {
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/scenes`, {
+  const res = await apiFetch(`${API_BASE}/scenes`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -23,7 +22,7 @@ export async function getScenes(): Promise<Scene[]> {
 }
 
 export async function getScene(id: string): Promise<Scene> {
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/scenes/${id}`, {
+  const res = await apiFetch(`${API_BASE}/scenes/${id}`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -49,7 +48,7 @@ export async function submitSessionForGrading(
     form.append("audio_chunks", blob, "take.webm");
   }
 
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/grade`, {
+  const res = await apiFetch(`${API_BASE}/grade`, {
     method: "POST",
     body: form,
   });
@@ -72,7 +71,7 @@ export async function saveSession(payload: {
   overall_score_raw: number;
   export_url?: string;
 }): Promise<Session> {
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/sessions`, {
+  const res = await apiFetch(`${API_BASE}/sessions`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -85,7 +84,7 @@ export async function saveSession(payload: {
 }
 
 export async function getUserSessions(): Promise<Session[]> {
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/sessions`, {
+  const res = await apiFetch(`${API_BASE}/sessions`, {
     cache: "no-store",
   });
   if (!res.ok) {
@@ -113,7 +112,7 @@ export async function startExport(
     form.append("audio_chunks", blob, "take.webm");
   }
 
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/export`, {
+  const res = await apiFetch(`${API_BASE}/export`, {
     method: "POST",
     body: form,
   });
@@ -132,7 +131,7 @@ export async function startExport(
 }
 
 export async function getExport(exportId: string): Promise<ExportJob> {
-  const res = await apiFetch(`${GO_BACKEND_URL}/api/v1/exports/${exportId}`, {
+  const res = await apiFetch(`${API_BASE}/exports/${exportId}`, {
     cache: "no-store",
   });
   const data = await res.json().catch(() => ({}));
