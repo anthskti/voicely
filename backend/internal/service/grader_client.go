@@ -81,7 +81,7 @@ func (c *GraderClient) EvaluateTakes(ctx context.Context, req model.GraderReques
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return nil, fmt.Errorf("grader returned status %d: %s", resp.StatusCode, truncate(respBody, 512))
+		return nil, fmt.Errorf("grader returned status %d: %s", resp.StatusCode, graderErrorDetail(respBody))
 	}
 
 	var out model.GraderResponse
@@ -98,6 +98,23 @@ func createAudioPart(w *multipart.Writer, fieldName, filename string) (io.Writer
 		fmt.Sprintf(`form-data; name="%s"; filename="%s"`, fieldName, filename))
 	header.Set("Content-Type", "application/octet-stream")
 	return w.CreatePart(header)
+}
+
+func graderErrorDetail(body []byte) string {
+	var payload map[string]any
+	if json.Unmarshal(body, &payload) == nil {
+		if d, ok := payload["detail"]; ok {
+			switch v := d.(type) {
+			case string:
+				return v
+			default:
+				if b, err := json.Marshal(v); err == nil {
+					return string(b)
+				}
+			}
+		}
+	}
+	return truncate(body, 512)
 }
 
 func truncate(b []byte, n int) string {

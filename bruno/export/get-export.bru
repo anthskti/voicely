@@ -1,0 +1,19 @@
+meta {
+  name: Get export status
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/api/v1/exports/{{exportId}}
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+docs {
+  Set exportId in the environment from the POST /export response.
+}

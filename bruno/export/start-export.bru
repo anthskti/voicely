@@ -1,0 +1,31 @@
+meta {
+  name: Start export (Valorant takes)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/v1/export
+  body: multipartForm
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+body:multipart-form {
+  scene_id: {{sceneId}}
+  user_id: {{userId}}
+  audio_chunks: @file(../valorant/user_voice/Track1_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track2_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track3_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track4_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track5_VoiceAudio.wav)
+  audio_chunks: @file(../valorant/user_voice/Track6_VoiceAudio.wav)
+}
+
+docs {
+  202 { export_id, status: processing }. Poll GET /api/v1/exports/:id.
+  Needs AWS_S3_BUCKET + keys and ffmpeg on the Go host. See backend/.idea/s3.md.
+}

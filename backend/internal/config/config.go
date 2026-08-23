@@ -1,16 +1,41 @@
 package config
 
-import "os"
+import (
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 type Config struct {
 	Port             string
 	GraderServiceURL string
+	DatabaseURL      string
+	AWSRegion        string
+	AWSS3Bucket      string
+	AWSS3PublicBase  string
 }
 
 func Load() Config {
+	loadEnvFile()
+
 	return Config{
-		Port:             getEnv("PORT", "8080"),
-		GraderServiceURL: getEnv("GRADER_SERVICE_URL", "http://localhost:8000/evaluate"),
+		Port:             getEnv("PORT", ""),
+		GraderServiceURL: getEnv("GRADER_SERVICE_URL", ""),
+		DatabaseURL:      getEnv("DATABASE_URL", ""),
+		AWSRegion:        getEnv("AWS_REGION", ""),
+		AWSS3Bucket:      getEnv("AWS_S3_BUCKET", ""),
+		AWSS3PublicBase:  getEnv("AWS_S3_PUBLIC_BASE_URL", ""),
+	}
+}
+
+// Existing process env overrides
+func loadEnvFile() {
+	for _, path := range []string{".env", "backend/.env"} {
+		if err := godotenv.Load(path); err == nil {
+			log.Printf("loaded env from %s", path)
+			return
+		}
 	}
 }
 

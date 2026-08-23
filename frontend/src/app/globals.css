@@ -1,26 +1,103 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-dark: #262733;
+    --bg-card: rgba(38, 39, 51, 0.7);
+    --bg-card-hover: rgba(50, 52, 68, 0.85);
+    --text-primary: #EDEFF1;
+    --text-muted: #93BADF;
+    --accent-blue: #93BADF;
+    --accent-green: #708F7F;
+    --accent-red: #431625;
+    --accent-red-bright: #e63946;
+    --border-color: rgba(147, 186, 223, 0.2);
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    background-image: radial-gradient(rgba(147, 186, 223, 0.14) 1px, transparent 1px);
+    background-size: 20px 20px;
+    color: var(--text-primary);
+    font-family: var(--font-questrial), sans-serif;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: var(--font-grenze), serif;
+  }
+
+  .font-body {
+    font-family: var(--font-questrial), sans-serif;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(26, 27, 35, 0.6);
+}
+::-webkit-scrollbar-thumb {
+  background: #3a3d52;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-blue);
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(38, 39, 51, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(147, 186, 223, 0.15);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-card {
+  background: rgba(46, 48, 63, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(147, 186, 223, 0.12);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  background: rgba(56, 58, 77, 0.7);
+  border-color: rgba(147, 186, 223, 0.35);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+}
+
+/* Atmospheric Title Text Glow */
+.glow-title {
+  text-shadow: 0 0 20px rgba(147, 186, 223, 0.5), 0 0 40px rgba(112, 143, 127, 0.3);
+  animation: pulseGlow 4s ease-in-out infinite alternate;
+}
+
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 15px rgba(147, 186, 223, 0.4), 0 0 30px rgba(112, 143, 127, 0.2);
+  }
+  100% {
+    text-shadow: 0 0 25px rgba(147, 186, 223, 0.7), 0 0 50px rgba(112, 143, 127, 0.5), 0 0 70px rgba(230, 57, 70, 0.2);
+  }
+}
+
+/* Subtle CRT Scanline overlay */
+.scanline-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(18, 16, 26, 0) 50%,
+    rgba(0, 0, 0, 0.25) 50%
+  );
+  background-size: 100% 4px;
+  pointer-events: none;
+  opacity: 0.15;
+  z-index: 1;
 }

@@ -17,6 +17,9 @@ COPY main.py ./
 
 RUN uv sync --frozen --no-dev
 
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
 ENV PORT=8000
 ENV HOST=0.0.0.0
 EXPOSE 8000

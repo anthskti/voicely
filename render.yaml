@@ -16,6 +16,18 @@ services:
         value: "8080"
       - key: GRADER_SERVICE_URL
         value: http://voicely-grader:10000/evaluate
+      - key: DATABASE_URL
+        sync: false
+      - key: AWS_REGION
+        value: us-east-2
+      - key: AWS_S3_BUCKET
+        value: voicely-proto-0821
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: AWS_S3_PUBLIC_BASE_URL
+        sync: false
 
   - type: pserv
     name: voicely-grader
