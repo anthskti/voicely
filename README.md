@@ -50,7 +50,7 @@ Optional (run services without Docker):
 ## Install
 
 ```bash
-git clone <repo-url> voicely
+git clone https://github.com/anthskti/voicely
 cd voicely
 
 cp frontend/.env.local.example frontend/.env.local
