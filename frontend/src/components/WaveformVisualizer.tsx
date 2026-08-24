@@ -98,19 +98,25 @@ export function WaveformVisualizer({
       return;
     }
 
+    const Ctx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
     if (!audioCtxRef.current) {
-      audioCtxRef.current = new AudioContext();
+      audioCtxRef.current = new Ctx();
     }
     const audioCtx = audioCtxRef.current;
+    void audioCtx.resume();
     const analyser = audioCtx.createAnalyser();
     analyser.fftSize = 512;
     analyserRef.current = analyser;
 
-    const source = audioCtx.createMediaStreamSource(stream);
+    // Clone so Web Audio does not steal the track from MediaRecorder (Safari).
+    const source = audioCtx.createMediaStreamSource(stream.clone());
     source.connect(analyser);
 
     return () => {
       source.disconnect();
+      source.mediaStream.getTracks().forEach((t) => t.stop());
     };
   }, [isRecording, stream]);
 

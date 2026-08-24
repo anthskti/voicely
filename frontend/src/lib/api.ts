@@ -1,4 +1,5 @@
 import { Scene, GradeResponse, Session, ExportJob } from "./types";
+import { audioUploadFilename } from "./record-audio";
 
 const API_BASE = "/api/v1";
 
@@ -44,9 +45,9 @@ export async function submitSessionForGrading(
     form.append("reference_audio_urls", c.reference_audio_url);
   }
 
-  for (const blob of recordedBlobs) {
-    form.append("audio_chunks", blob, "take.webm");
-  }
+  recordedBlobs.forEach((blob, index) => {
+    form.append("audio_chunks", blob, audioUploadFilename(blob, index));
+  });
 
   const res = await apiFetch(`${API_BASE}/grade`, {
     method: "POST",
@@ -108,9 +109,9 @@ export async function startExport(
   if (sessionId) {
     form.append("session_id", sessionId);
   }
-  for (const blob of recordedBlobs) {
-    form.append("audio_chunks", blob, "take.webm");
-  }
+  recordedBlobs.forEach((blob, index) => {
+    form.append("audio_chunks", blob, audioUploadFilename(blob, index));
+  });
 
   const res = await apiFetch(`${API_BASE}/export`, {
     method: "POST",

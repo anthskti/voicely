@@ -43,7 +43,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#262733] text-[#EDEFF1] relative flex flex-col scanline-bg">
+    <div className="min-h-screen bg-[#262733] text-[#EDEFF1] relative flex flex-col scanline-bg pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
       {/* Background Ambient Radial Glow Blobs */}
       <div className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-gradient-to-tr from-[#93BADF]/15 via-[#708F7F]/10 to-[#431625]/20 rounded-full blur-[120px] pointer-events-none z-0" />
       <div className="fixed bottom-0 right-0 w-[500px] h-[500px] bg-[#431625]/25 rounded-full blur-[140px] pointer-events-none z-0" />

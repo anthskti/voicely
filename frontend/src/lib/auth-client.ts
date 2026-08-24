@@ -23,6 +23,11 @@ type AuthResult = {
   data?: SessionData;
 };
 
+type MeResult =
+  | { status: "authenticated"; data: SessionData }
+  | { status: "guest" }
+  | { status: "error"; message: string };
+
 async function parseAuthError(res: Response): Promise<AuthError> {
   const body = await res.json().catch(() => ({}));
   const message =
@@ -34,21 +39,29 @@ async function parseAuthError(res: Response): Promise<AuthError> {
   return { message };
 }
 
-async function fetchMe(): Promise<SessionData | null> {
-  const res = await fetch(`${API_BASE}/auth/me`, {
-    credentials: "include",
-    cache: "no-store",
-  });
-  if (res.status === 401) return null;
-  if (!res.ok) {
-    throw new Error((await parseAuthError(res)).message);
+async function fetchMeResult(): Promise<MeResult> {
+  try {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      credentials: "include",
+      cache: "no-store",
+    });
+    if (res.status === 401) {
+      return { status: "guest" };
+    }
+    if (!res.ok) {
+      return { status: "error", message: (await parseAuthError(res)).message };
+    }
+    return { status: "authenticated", data: (await res.json()) as SessionData };
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Could not reach the server";
+    return { status: "error", message };
   }
-  return (await res.json()) as SessionData;
 }
 
 let sessionListeners: Array<() => void> = [];
 let cachedSession: SessionData | null = null;
 let sessionLoaded = false;
+let sessionError: string | null = null;
 let sessionPromise: Promise<SessionData | null> | null = null;
 
 function notifySessionListeners() {
@@ -63,12 +76,25 @@ async function loadSession(force = false): Promise<SessionData | null> {
     return sessionPromise;
   }
 
-  sessionPromise = fetchMe()
-    .then((data) => {
-      cachedSession = data;
-      sessionLoaded = true;
+  sessionPromise = fetchMeResult()
+    .then((result) => {
+      if (result.status === "authenticated") {
+        cachedSession = result.data;
+        sessionLoaded = true;
+        sessionError = null;
+        notifySessionListeners();
+        return result.data;
+      }
+      if (result.status === "guest") {
+        cachedSession = null;
+        sessionLoaded = true;
+        sessionError = null;
+        notifySessionListeners();
+        return null;
+      }
+      sessionError = result.message;
       notifySessionListeners();
-      return data;
+      return cachedSession;
     })
     .finally(() => {
       sessionPromise = null;
@@ -79,15 +105,20 @@ async function loadSession(force = false): Promise<SessionData | null> {
 
 export function useSession() {
   const [data, setData] = useState<SessionData | null>(cachedSession);
-  const [isPending, setIsPending] = useState(!sessionLoaded);
+  const [error, setError] = useState<string | null>(sessionError);
+  const [isPending, setIsPending] = useState(!sessionLoaded && !sessionError);
+  const [isResolved, setIsResolved] = useState(sessionLoaded);
 
   const refresh = useCallback(async () => {
     setIsPending(true);
+    setError(null);
+    sessionError = null;
+    sessionLoaded = false;
     try {
       const next = await loadSession(true);
       setData(next);
-    } catch {
-      setData(null);
+      setError(sessionError);
+      setIsResolved(sessionLoaded);
     } finally {
       setIsPending(false);
     }
@@ -98,27 +129,33 @@ export function useSession() {
 
     const listener = () => {
       setData(cachedSession);
+      setError(sessionError);
+      setIsResolved(sessionLoaded);
       setIsPending(false);
     };
 
     sessionListeners.push(listener);
 
-    if (!sessionLoaded) {
+    if (!sessionLoaded && !sessionError) {
       loadSession()
-        .then((next) => {
+        .then(() => {
           if (!cancelled) {
-            setData(next);
+            setData(cachedSession);
+            setError(sessionError);
+            setIsResolved(sessionLoaded);
             setIsPending(false);
           }
         })
         .catch(() => {
           if (!cancelled) {
-            setData(null);
+            setError(sessionError);
             setIsPending(false);
           }
         });
     } else {
       setIsPending(false);
+      setIsResolved(sessionLoaded);
+      setError(sessionError);
     }
 
     return () => {
@@ -127,7 +164,7 @@ export function useSession() {
     };
   }, []);
 
-  return { data, isPending, refresh };
+  return { data, isPending, error, isResolved, refresh };
 }
 
 async function postAuth(path: string, body: Record<string, string>): Promise<AuthResult> {
@@ -144,21 +181,23 @@ async function postAuth(path: string, body: Record<string, string>): Promise<Aut
 
   await res.json().catch(() => undefined);
 
-  // Login JSON is not enough — the browser must actually store the session cookie.
-  const me = await fetchMe();
-  if (!me?.user) {
+  const me = await fetchMeResult();
+  if (me.status !== "authenticated") {
     return {
       error: {
         message:
-          "Signed in, but the session cookie was blocked. Server side issue.",
+          me.status === "error"
+            ? me.message
+            : "Signed in, but the session cookie was blocked. Server side issue.",
       },
     };
   }
 
-  cachedSession = me;
+  cachedSession = me.data;
   sessionLoaded = true;
+  sessionError = null;
   notifySessionListeners();
-  return { data: me };
+  return { data: me.data };
 }
 
 export const signIn = {
@@ -189,5 +228,6 @@ export async function signOut(): Promise<void> {
 
   cachedSession = null;
   sessionLoaded = true;
+  sessionError = null;
   notifySessionListeners();
 }

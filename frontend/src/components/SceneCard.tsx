@@ -1,15 +1,65 @@
+import { forwardRef } from "react";
 import Image from "next/image";
 import { Scene } from "@/lib/types";
 import { GradeDisplay } from "./GradeDisplay";
 
-interface SceneRowProps {
+interface SceneCardProps {
   scene: Scene;
   isSelected: boolean;
   bestGrade?: string;
+  variant?: "row" | "strip";
   onSelect: (scene: Scene) => void;
 }
 
-export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowProps) {
+export const SceneCard = forwardRef<HTMLDivElement, SceneCardProps>(function SceneCard(
+  { scene, isSelected, bestGrade, variant = "row", onSelect },
+  ref
+) {
+  if (variant === "strip") {
+    return (
+      <div
+        ref={ref}
+        role="button"
+        tabIndex={0}
+        onClick={() => onSelect(scene)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onSelect(scene);
+          }
+        }}
+        className={`flex w-[4.75rem] shrink-0 snap-center flex-col items-center gap-1.5 cursor-pointer transition-all duration-200 ${
+          isSelected ? "opacity-100" : "opacity-70 hover:opacity-90"
+        }`}
+      >
+        <div
+          className={`relative h-[4.75rem] w-[4.75rem] overflow-hidden rounded-2xl border bg-[#1d1e27] transition-all ${
+            isSelected
+              ? "ring-2 ring-[#93BADF] ring-offset-2 ring-offset-[#1d1e27] border-[#93BADF]/50"
+              : "border-white/10"
+          }`}
+        >
+          {scene.thumbnail_url ? (
+            <Image
+              src={scene.thumbnail_url}
+              alt={scene.title}
+              fill
+              className="object-cover"
+              unoptimized
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-[#262733] text-[9px] font-mono text-[#93BADF]">
+              NO IMG
+            </div>
+          )}
+        </div>
+        <span className="line-clamp-2 w-full text-center text-[10px] font-semibold leading-tight text-[#EDEFF1]/80">
+          {scene.title}
+        </span>
+      </div>
+    );
+  }
+
   const getDifficultyColor = (diff: string) => {
     switch (diff.toLowerCase()) {
       case "beginner":
@@ -25,6 +75,7 @@ export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowPr
 
   return (
     <div
+      ref={ref}
       onClick={() => onSelect(scene)}
       className={`group relative flex items-center justify-between gap-4 p-4 rounded-2xl cursor-pointer transition-all duration-300 border ${
         isSelected
@@ -32,7 +83,6 @@ export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowPr
           : "bg-[#1a1b24]/60 border-white/5 opacity-60 hover:opacity-100 hover:bg-[#1a1b24]/90 hover:translate-x-1.5 hover:border-[#93BADF]/30"
       }`}
     >
-      {/* Active Left Indicator Bar */}
       <div
         className={`absolute left-0 top-1/2 -translate-y-1/2 h-8 w-1 rounded-r-full bg-[#93BADF] transition-opacity ${
           isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-50"
@@ -40,7 +90,6 @@ export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowPr
       />
 
       <div className="flex items-center gap-4 min-w-0">
-        {/* Small Thumbnail */}
         <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-xl bg-[#1d1e27] border border-white/10">
           {scene.thumbnail_url ? (
             <Image
@@ -57,7 +106,6 @@ export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowPr
           )}
         </div>
 
-        {/* Scene Info */}
         <div className="min-w-0">
           <h3 className="font-display text-lg font-bold text-white group-hover:text-[#93BADF] transition-colors truncate">
             {scene.title}
@@ -77,7 +125,6 @@ export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowPr
         </div>
       </div>
 
-      {/* Right Side Grade or Arrow */}
       <div className="shrink-0 flex items-center gap-3">
         {bestGrade && <GradeDisplay grade={bestGrade} size="sm" />}
         <svg
@@ -93,4 +140,4 @@ export function SceneCard({ scene, isSelected, bestGrade, onSelect }: SceneRowPr
       </div>
     </div>
   );
-}
+});

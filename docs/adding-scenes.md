@@ -44,19 +44,19 @@ my-scene/
 
 ## 2. Author `chunks.json`
 
-Same shape as [`valorant/chunks.json`](../valorant/chunks.json). One entry per line the user records.
+Only **`id`**, **`title`**, optional **`difficulty`**, and **`chunks`** (timings + transcript). No S3 URLs — the upload script builds those from `id`.
 
 ```json
 {
-  "id": "scene_my_clip",
-  "title": "My Clip",
+  "id": "scene_jjk_gojo",
+  "title": "Gojo Satoru",
+  "difficulty": "Intermediate",
   "chunks": [
     {
       "index": 0,
       "start_time_sec": 1.3,
       "end_time_sec": 3.0,
-      "transcript": "Line one.",
-      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_my_clip/refs/chunk_00.wav"
+      "transcript": "Line one."
     }
   ]
 }
@@ -64,76 +64,67 @@ Same shape as [`valorant/chunks.json`](../valorant/chunks.json). One entry per l
 
 Rules:
 
+- `id` becomes the S3 prefix `scenes/<id>/` and the Postgres primary key.
 - `index` starts at `0`, contiguous (`0..n-1`).
 - `start_time_sec` / `end_time_sec` match the **vocals** track (used for slicing + studio jumps).
-- `reference_audio_url` must match the S3 key the upload script will write: `refs/chunk_XX.wav`.
 - Chunk count must match the number of takes the user records in studio.
+
+See [`scenes/gojo/chunks.json`](../scenes/gojo/chunks.json) for a minimal example.
 
 ---
 
-## 3. Upload to S3
+## 3. Upload to S3 (+ auto-generate seed JSON)
 
 Use your **personal AWS CLI** credentials (not the `voice-api` IAM user — that user is exports-only).
 
-From your scene folder:
+From repo root or `scenes/`:
 
 ```bash
-BUCKET=voicely-proto-0821 PREFIX=scenes/scene_my_clip ./upload-to-s3.sh
+# from scenes/
+./upload-to-s3.sh gojo
+
+# or from inside the scene folder
+cd scenes/gojo && ../upload-to-s3.sh
 ```
 
-The script (see [`valorant/upload-to-s3.sh`](../valorant/upload-to-s3.sh)):
+Shared script: [`scenes/upload-to-s3.sh`](../scenes/upload-to-s3.sh). It:
 
-1. Slices `vocals.mp3` → `refs/chunk_XX.wav` using `chunks.json`
-2. Uploads `video.mp4`, `soundtrack.mp3`, `vocals.mp3`, `thumbnail.png`, `refs/*`
+1. Reads `id` from `chunks.json` → uploads to `s3://voicely-proto-0821/scenes/<id>/`
+2. Slices `vocals.mp3` (or `valorant-vocals.mp3`) → `refs/chunk_XX.wav`
+3. Uploads `video.mp4`, `soundtrack.mp3`, `vocals.mp3`, `thumbnail.png`, `refs/*`
+4. Writes [`backend/internal/seed/<id>.json`](../backend/internal/seed/) with full HTTPS URLs
+
+Media file names (first match wins):
+
+| Role | Names tried |
+|------|-------------|
+| Video | `video.mp4`, `phoenix.mp4` |
+| Soundtrack | `soundtrack.mp3`, `valorant-music.mp3` |
+| Vocals | `vocals.mp3`, `valorant-vocals.mp3` |
+| Thumbnail | `thumbnail.png`, `valorant_thumbnail.png` |
 
 Verify:
 
 ```bash
-aws s3 ls s3://voicely-proto-0821/scenes/scene_my_clip/ --recursive
-curl -I "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_my_clip/video.mp4"
+aws s3 ls s3://voicely-proto-0821/scenes/scene_jjk_gojo/ --recursive
 ```
 
 `scenes/*` must be **public-read** (browser + grader fetch via HTTPS).
 
 ---
 
-## 4. Add seed JSON
+## 4. Seed on API boot
 
-Create [`backend/internal/seed/scene_my_clip.json`](../backend/internal/seed/scene_my_clip.json) (copy [`scene_valorant.json`](../backend/internal/seed/scene_valorant.json)).
+[`backend/internal/seed/seed.go`](../backend/internal/seed/seed.go) embeds every `scene_*.json` in `internal/seed/` and upserts on startup. After upload, commit the generated JSON and redeploy the API.
 
-Required fields:
+**Skip this section** if you used the upload script — seed JSON is already written. Old manual steps:
 
-| Field | Notes |
-|-------|--------|
-| `id` | Same as S3 folder name, e.g. `scene_my_clip` |
-| `title` | Shown in UI |
-| `difficulty` | e.g. `Beginner`, `Intermediate`, `Advanced` |
-| `thumbnail_url` | `.../scenes/<id>/thumbnail.png` |
-| `video_url` | `.../video.mp4` |
-| `soundtrack_url` | `.../soundtrack.mp3` |
-| `vocals_url` | `.../vocals.mp3` (kept for pipeline; studio uses video audio) |
-| `chunks` | Full array with `reference_audio_url` per line |
+<details>
+<summary>Manual seed JSON (optional)</summary>
 
-URL base (current bucket):
+Create [`backend/internal/seed/scene_my_clip.json`](../backend/internal/seed/scene_my_clip.json) only if you are not using `upload-to-s3.sh`.
 
-```text
-https://voicely-proto-0821.s3.amazonaws.com/scenes/<scene_id>/<file>
-```
-
-### Wire seed into Go
-
-Today [`backend/internal/seed/seed.go`](../backend/internal/seed/seed.go) only embeds **one** file. For a new scene, extend it to upsert each JSON file (same `OnConflict` on `id`):
-
-```go
-//go:embed scene_valorant.json scene_my_clip.json
-var sceneFiles embed.FS
-
-// loop: ReadFile → Unmarshal → gdb.Clauses(OnConflict...).Create(&scene)
-```
-
-Until you add that, a new JSON file alone will **not** load — you must update `seed.go` or use SQL (below).
-
-Seed **upserts** by `id`: redeploying the API updates title, URLs, and chunks for existing ids; it does not delete old scenes.
+</details>
 
 ---
 

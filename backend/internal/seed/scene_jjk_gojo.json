@@ -1,0 +1,46 @@
+{
+  "id": "scene_jjk_gojo",
+  "title": "Gojo Satoru",
+  "difficulty": "Intermediate",
+  "thumbnail_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/thumbnail.png",
+  "video_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/video.mp4",
+  "soundtrack_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/soundtrack.mp3",
+  "vocals_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/vocals.mp3",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 9.3,
+      "end_time_sec": 12.2,
+      "transcript": "Amanai, I\u2019m sorry,",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 12.2,
+      "end_time_sec": 16.9,
+      "transcript": "but I have to admit, I\u2019m not even angry about you anymore.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 16.9,
+      "end_time_sec": 19.5,
+      "transcript": "I bare no grudge against anyone.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/refs/chunk_02.wav"
+    },
+    {
+      "index": 3,
+      "start_time_sec": 20.9,
+      "end_time_sec": 27.0,
+      "transcript": "It\u2019s just that the world feel so, so wonderful right now.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/refs/chunk_03.wav"
+    },
+    {
+      "index": 4,
+      "start_time_sec": 38.8,
+      "end_time_sec": 46.3,
+      "transcript": "Throughout Heaven and Earth, I alone am the honoured one.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_jjk_gojo/refs/chunk_04.wav"
+    }
+  ]
+}

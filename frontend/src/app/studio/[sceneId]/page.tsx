@@ -6,6 +6,7 @@ import { getScene } from "@/lib/api";
 import { Scene, Chunk } from "@/lib/types";
 import { WaveformVisualizer } from "@/components/WaveformVisualizer";
 import { sessionAudioKey } from "@/lib/session-audio";
+import { pickAudioRecorderMimeType, requestMicStream } from "@/lib/record-audio";
 
 type StudioState = "idle" | "playing_ref" | "countdown" | "recording" | "playing_take";
 
@@ -45,16 +46,16 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
     ? Math.max(0.5, currentChunk.end_time_sec - currentChunk.start_time_sec)
     : 3;
 
-  // Initialize Mic Stream
+  // Warm the mic on browsers that allow it without a tap. Safari iOS often
+  // rejects this; Record retries getUserMedia from the user gesture.
   useEffect(() => {
     let mounted = true;
     async function initMic() {
       try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const stream = await requestMicStream();
         if (mounted) setMediaStream(stream);
       } catch (err) {
-        console.warn("Microphone access denied:", err);
-        setError("Microphone access is required to record voice-over takes.");
+        console.warn("Microphone not granted yet:", err);
       }
     }
     initMic();
@@ -127,10 +128,17 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
   }, [currentChunkIndex]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // 2. Start Countdown & Recording Flow
-  const handleStartCountdown = () => {
-    if (!mediaStream) {
-      setError("No microphone available. Please enable mic access.");
-      return;
+  const handleStartCountdown = async () => {
+    let stream = mediaStream;
+    if (!stream || stream.getAudioTracks().every((t) => t.readyState !== "live")) {
+      try {
+        stream = await requestMicStream();
+        setMediaStream(stream);
+      } catch (err) {
+        console.warn("Microphone access denied:", err);
+        setError("Microphone access is required to record. Allow the mic for this site in Safari settings, then tap Record again.");
+        return;
+      }
     }
 
     // Stop video & audio
@@ -150,6 +158,7 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
     let count = 3;
     if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
 
+    const streamForTake = stream;
     countdownIntervalRef.current = setInterval(() => {
       count -= 1;
       if (count > 0) {
@@ -157,22 +166,30 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
       } else {
         if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current);
         setCountdownValue(null);
-        startActualRecording();
+        startActualRecording(streamForTake);
       }
     }, 1000);
   };
 
   // 3. Start Recording Take
-  const startActualRecording = () => {
-    if (!mediaStream || !currentChunk) return;
+  const startActualRecording = (stream: MediaStream) => {
+    if (!currentChunk) return;
 
     recordedChunksRef.current = [];
     try {
-      const mimeType = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
+      if (typeof MediaRecorder === "undefined") {
+        throw new Error("MediaRecorder is not available in this browser");
+      }
 
-      const recorder = new MediaRecorder(mediaStream, { mimeType });
+      const mimeType = pickAudioRecorderMimeType();
+      let recorder: MediaRecorder;
+      try {
+        recorder = mimeType
+          ? new MediaRecorder(stream, { mimeType })
+          : new MediaRecorder(stream);
+      } catch {
+        recorder = new MediaRecorder(stream);
+      }
       mediaRecorderRef.current = recorder;
 
       recorder.ondataavailable = (e) => {
@@ -182,7 +199,8 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
       };
 
       recorder.onstop = () => {
-        const blob = new Blob(recordedChunksRef.current, { type: mimeType });
+        const type = recorder.mimeType || mimeType || "audio/webm";
+        const blob = new Blob(recordedChunksRef.current, { type });
         setRecordedBlobs((prev) => {
           const next = [...prev];
           next[currentChunkIndex] = blob;
@@ -191,7 +209,8 @@ export default function StudioPage({ params }: { params: Promise<{ sceneId: stri
         setStudioState("idle");
       };
 
-      recorder.start(50);
+      // Safari throws or writes empty blobs if given a timeslice (e.g. 50ms).
+      recorder.start();
       setStudioState("recording");
 
       // Play video muted during recording take

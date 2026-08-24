@@ -154,12 +154,10 @@ export default function ResultsPage({ params }: { params: Promise<{ sceneId: str
   };
 
   return (
-    <div className="flex min-h-screen bg-[#262733] text-[#EDEFF1] relative scanline-bg">
-      {/* LEFT SIDEBAR PANEL */}
+    <div className="flex min-h-screen flex-col lg:flex-row bg-[#262733] text-[#EDEFF1] relative scanline-bg">
       <Sidebar />
 
-      {/* MAIN CONTENT AREA */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 flex flex-col min-w-0 pb-[calc(5rem+env(safe-area-inset-bottom))] lg:pb-0">
         <main className="flex-1 max-w-5xl mx-auto w-full px-4 sm:px-8 py-10">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24 text-center">
