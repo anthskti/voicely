@@ -1,0 +1,95 @@
+{
+  "id": "scene_spyxfamily_loid",
+  "title": "Spy x Family: Loid Forger",
+  "difficulty": "Intermediate",
+  "thumbnail_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/thumbnail.png",
+  "video_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/video.mp4",
+  "soundtrack_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/soundtrack.mp3",
+  "vocals_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/vocals.mp3",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 4.5,
+      "end_time_sec": 8.4,
+      "transcript": "I need to accurately measure your intellegence before you take the entrance exam.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 14.1,
+      "end_time_sec": 18.4,
+      "transcript": "I hope you're not planning on cheating. Listen, if you don't get into this school then...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 18.4,
+      "end_time_sec": 20.1,
+      "transcript": "(my mission fails.)",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_02.wav"
+    },
+    {
+      "index": 3,
+      "start_time_sec": 20.4,
+      "end_time_sec": 21.4,
+      "transcript": "*gruntful thinking*",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_03.wav"
+    },
+    {
+      "index": 4,
+      "start_time_sec": 23.4,
+      "end_time_sec": 24.0,
+      "transcript": "Ok...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_04.wav"
+    },
+    {
+      "index": 5,
+      "start_time_sec": 26.1,
+      "end_time_sec": 27.1,
+      "transcript": "I'm stepping out.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_05.wav"
+    },
+    {
+      "index": 6,
+      "start_time_sec": 28.6,
+      "end_time_sec": 32.8,
+      "transcript": "And you're staying right here. You're not coming with me, not today.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_06.wav"
+    },
+    {
+      "index": 7,
+      "start_time_sec": 38.2,
+      "end_time_sec": 41.6,
+      "transcript": "Ah? Hey! I said stay put!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_07.wav"
+    },
+    {
+      "index": 8,
+      "start_time_sec": 42.6,
+      "end_time_sec": 46.0,
+      "transcript": "I see you! You think you can hide from me?! There.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_08.wav"
+    },
+    {
+      "index": 9,
+      "start_time_sec": 46.8,
+      "end_time_sec": 47.8,
+      "transcript": "There!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_09.wav"
+    },
+    {
+      "index": 10,
+      "start_time_sec": 51.8,
+      "end_time_sec": 54.5,
+      "transcript": "Hahaha... try and get out of that!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_10.wav"
+    },
+    {
+      "index": 11,
+      "start_time_sec": 56.6,
+      "end_time_sec": 60.4,
+      "transcript": "I ended up putting a barricade infront of the doorand trapping her inside.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_spyxfamily_loid/refs/chunk_11.wav"
+    }
+  ]
+}

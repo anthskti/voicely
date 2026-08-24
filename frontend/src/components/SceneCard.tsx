@@ -1,5 +1,4 @@
 import { forwardRef } from "react";
-import Image from "next/image";
 import { Scene } from "@/lib/types";
 import { GradeDisplay } from "./GradeDisplay";
 
@@ -28,7 +27,7 @@ export const SceneCard = forwardRef<HTMLDivElement, SceneCardProps>(function Sce
             onSelect(scene);
           }
         }}
-        className={`flex w-[4.75rem] shrink-0 snap-center flex-col items-center gap-1.5 cursor-pointer transition-all duration-200 ${
+        className={`flex w-[4.75rem] shrink-0 snap-center flex-col items-center gap-1.5 cursor-pointer transition-all duration-200 px-1 ${
           isSelected ? "opacity-100" : "opacity-70 hover:opacity-90"
         }`}
       >
@@ -40,12 +39,10 @@ export const SceneCard = forwardRef<HTMLDivElement, SceneCardProps>(function Sce
           }`}
         >
           {scene.thumbnail_url ? (
-            <Image
+            <img
               src={scene.thumbnail_url}
               alt={scene.title}
-              fill
-              className="object-cover"
-              unoptimized
+              className="block h-full w-full object-cover"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-[#262733] text-[9px] font-mono text-[#93BADF]">
@@ -92,12 +89,10 @@ export const SceneCard = forwardRef<HTMLDivElement, SceneCardProps>(function Sce
       <div className="flex items-center gap-4 min-w-0">
         <div className="relative h-14 w-24 shrink-0 overflow-hidden rounded-xl bg-[#1d1e27] border border-white/10">
           {scene.thumbnail_url ? (
-            <Image
+            <img
               src={scene.thumbnail_url}
               alt={scene.title}
-              fill
-              className="object-cover"
-              unoptimized
+              className="block h-full w-full object-cover"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center bg-[#262733] text-[10px] font-mono text-[#93BADF]">
