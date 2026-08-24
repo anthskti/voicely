@@ -89,7 +89,7 @@ export default function ScenesPage() {
         <div className="flex items-center gap-4">
           <Link href="/" className="flex items-center gap-2 group">
             <span className="font-mono text-xs text-[#93BADF] group-hover:-translate-x-1 transition-transform">←</span>
-            <span className="font-display font-extrabold text-xl text-white">VOICELY</span>
+            <span className="font-display font-extrabold text-xl text-white">Voicely</span>
           </Link>
           <span className="text-xs text-[#EDEFF1]/40">•</span>
           <span className="text-xs font-semibold text-[#93BADF] uppercase tracking-widest">

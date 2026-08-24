@@ -16,7 +16,7 @@ export function Footer() {
           />
           <div className="flex flex-col items-start gap-0.5">
             <span className="font-display font-bold text-[#EDEFF1] tracking-wider">
-              VOICELY
+              Voicely
             </span>
             <p className="text-xs text-[#93BADF]/80">
               Real-time Voice Acting Practice Loop & AI Feedback Engine
