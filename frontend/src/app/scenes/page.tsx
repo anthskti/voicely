@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SceneCard } from "@/components/SceneCard";
+import { ScenePreview } from "@/components/ScenePreview";
 import { getScenes } from "@/lib/api";
 import { Scene } from "@/lib/types";
 import { useSession } from "@/lib/auth-client";
@@ -154,23 +155,7 @@ export default function ScenesPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-6">
-                <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-[#1a1b24]">
-                  {selectedScene.thumbnail_url ? (
-                    <img
-                      src={selectedScene.thumbnail_url}
-                      alt={selectedScene.title}
-                      className="absolute inset-0 block h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-full w-full items-center justify-center bg-[#262733] text-sm font-mono text-[#93BADF]">
-                      NO PREVIEW IMAGE
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#1d1e27] via-transparent to-transparent opacity-70" />
-                  <div className="absolute bottom-3 left-3 rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-xs font-mono text-white">
-                    {selectedScene.chunks.length} Dialogue Lines
-                  </div>
-                </div>
+                <ScenePreview scene={selectedScene} />
 
                 <div>
                   <div className="flex items-center gap-3 mb-2">
@@ -257,28 +242,6 @@ export default function ScenesPage() {
           </div>
       </main>
       )}
-    </div>
-  );
-}
-
-function ScenePreview({ scene }: { scene: Scene }) {
-  return (
-    <div className="relative aspect-video w-full overflow-hidden rounded-2xl border border-white/10 shadow-2xl bg-[#1a1b24]">
-      {scene.thumbnail_url ? (
-        <img
-          src={scene.thumbnail_url}
-          alt={scene.title}
-          className="absolute inset-0 block h-full w-full object-cover"
-        />
-      ) : (
-        <div className="flex h-full w-full items-center justify-center bg-[#262733] text-sm font-mono text-[#93BADF]">
-          NO PREVIEW IMAGE
-        </div>
-      )}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#1d1e27] via-transparent to-transparent opacity-70" />
-      <div className="absolute bottom-3 left-3 rounded-full border border-white/20 bg-black/60 backdrop-blur-md px-3 py-1 text-xs font-mono text-white">
-        {scene.chunks.length} Dialogue Lines
-      </div>
     </div>
   );
 }
