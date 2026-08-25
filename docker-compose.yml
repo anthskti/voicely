@@ -45,8 +45,6 @@ services:
       AUTH_COOKIE_SECURE: "false"
       AWS_REGION: ${AWS_REGION:-us-east-2}
       AWS_S3_BUCKET: ${AWS_S3_BUCKET:-voicely-proto-0821}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
       AWS_S3_PUBLIC_BASE_URL: ${AWS_S3_PUBLIC_BASE_URL:-}
     depends_on:
       postgres:

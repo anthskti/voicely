@@ -32,8 +32,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#262733] text-[#EDEFF1] font-body">
         {children}
+        <Analytics />
       </body>
-      <Analytics />
     </html>
   );
 }

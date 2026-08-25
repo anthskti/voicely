@@ -72,24 +72,17 @@
     },
     {
       "index": 9,
-      "start_time_sec": 46.8,
-      "end_time_sec": 53.2,
+      "start_time_sec": 50.0,
+      "end_time_sec": 53.5,
       "transcript": "Come on there's no time! You'll be late for the exam!",
       "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_09.wav"
     },
     {
       "index": 10,
-      "start_time_sec": 50.1,
-      "end_time_sec": 54.5,
+      "start_time_sec": 53.5,
+      "end_time_sec": 56.5,
       "transcript": "EAT, EAT, EAAATTTT!",
       "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_10.wav"
-    },
-    {
-      "index": 11,
-      "start_time_sec": 56.6,
-      "end_time_sec": 60.4,
-      "transcript": "I ended up putting a barricade infront of the door and trapping her inside.",
-      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_11.wav"
     }
   ]
 }
