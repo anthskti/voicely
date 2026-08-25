@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Grenze, Questrial } from "next/font/google";
 import "./globals.css";
+import { Analytics } from "@vercel/analytics/next"
 
 const grenze = Grenze({
   variable: "--font-grenze",
@@ -32,6 +33,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-[#262733] text-[#EDEFF1] font-body">
         {children}
       </body>
+      <Analytics />
     </html>
   );
 }
