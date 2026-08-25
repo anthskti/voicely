@@ -1,0 +1,60 @@
+{
+  "id": "scene_izukumidoriya",
+  "title": "My Hero Academia: Izuku Midoriya",
+  "difficulty": "Beginner",
+  "thumbnail_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/thumbnail.png",
+  "video_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/video.mp4",
+  "soundtrack_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/soundtrack.mp3",
+  "vocals_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/vocals.mp3",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 0.0,
+      "end_time_sec": 3.0,
+      "transcript": "I wanted to learn everything I could about them...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 3.1,
+      "end_time_sec": 6.2,
+      "transcript": "It was all in the note book your burned and threw away.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 9.3,
+      "end_time_sec": 10.0,
+      "transcript": "*grunts*",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_02.wav"
+    },
+    {
+      "index": 3,
+      "start_time_sec": 10.6,
+      "end_time_sec": 12.3,
+      "transcript": "You can call me Deku...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_03.wav"
+    },
+    {
+      "index": 4,
+      "start_time_sec": 12.3,
+      "end_time_sec": 15.3,
+      "transcript": "but I'm not the same helpless, defenseless kid anymore.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_04.wav"
+    },
+    {
+      "index": 5,
+      "start_time_sec": 16.0,
+      "end_time_sec": 18.3,
+      "transcript": "You hear me! I've changed!.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_05.wav"
+    },
+    {
+      "index": 6,
+      "start_time_sec": 19.3,
+      "end_time_sec": 22.0,
+      "transcript": "From now on, Deku is the name of a hero!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_izukumidoriya/refs/chunk_06.wav"
+    }
+  ]
+}

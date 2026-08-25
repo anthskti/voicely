@@ -1,0 +1,95 @@
+{
+  "id": "scene_allmight",
+  "title": "My Hero Academia: All Might",
+  "difficulty": "Intermediate",
+  "thumbnail_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/thumbnail.png",
+  "video_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/video.mp4",
+  "soundtrack_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/soundtrack.mp3",
+  "vocals_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/vocals.mp3",
+  "chunks": [
+    {
+      "index": 0,
+      "start_time_sec": 0.5,
+      "end_time_sec": 3.1,
+      "transcript": "It was your hard work that did this, not mine .",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_00.wav"
+    },
+    {
+      "index": 1,
+      "start_time_sec": 3.7,
+      "end_time_sec": 7.2,
+      "transcript": "Now, for your reward, Izuku Midoriya...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_01.wav"
+    },
+    {
+      "index": 2,
+      "start_time_sec": 10.6,
+      "end_time_sec": 12.1,
+      "transcript": "Someone told me this once...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_02.wav"
+    },
+    {
+      "index": 3,
+      "start_time_sec": 12.1,
+      "end_time_sec": 17.3,
+      "transcript": "There's a difference being lucky and deserving, ones an accident, the other, a reward.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_03.wav"
+    },
+    {
+      "index": 4,
+      "start_time_sec": 17.3,
+      "end_time_sec": 19.1,
+      "transcript": "Never get the two confused.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_04.wav"
+    },
+    {
+      "index": 5,
+      "start_time_sec": 20.6,
+      "end_time_sec": 22.4,
+      "transcript": "That that to heart young man.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_05.wav"
+    },
+    {
+      "index": 6,
+      "start_time_sec": 23.5,
+      "end_time_sec": 27.3,
+      "transcript": "This gift, you earned it with your own valiant efforts.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_06.wav"
+    },
+    {
+      "index": 7,
+      "start_time_sec": 40.3,
+      "end_time_sec": 41.4,
+      "transcript": "Eat this...",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_07.wav"
+    },
+    {
+      "index": 8,
+      "start_time_sec": 43.5,
+      "end_time_sec": 47.5,
+      "transcript": "To inherit my power you got to swallow some of my DNA --that's how it works!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_08.wav"
+    },
+    {
+      "index": 9,
+      "start_time_sec": 46.8,
+      "end_time_sec": 53.2,
+      "transcript": "Come on there's no time! You'll be late for the exam!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_09.wav"
+    },
+    {
+      "index": 10,
+      "start_time_sec": 50.1,
+      "end_time_sec": 54.5,
+      "transcript": "EAT, EAT, EAAATTTT!",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_10.wav"
+    },
+    {
+      "index": 11,
+      "start_time_sec": 56.6,
+      "end_time_sec": 60.4,
+      "transcript": "I ended up putting a barricade infront of the door and trapping her inside.",
+      "reference_audio_url": "https://voicely-proto-0821.s3.amazonaws.com/scenes/scene_allmight/refs/chunk_11.wav"
+    }
+  ]
+}
